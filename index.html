@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>정지윤 통합사회 기말 대비 퀴즈</title>
+<style>
+  :root {
+    --bg: #f4f6f7;
+    --card: #ffffff;
+    --ink: #1d2b2e;
+    --muted: #65787c;
+    --line: #e1e8e9;
+    --teal: #1f7a78;
+    --teal-dark: #155c5a;
+    --teal-soft: #e4f1f0;
+    --green: #2f7d5b;
+    --green-soft: #e7f1ea;
+  }
+  
+  * { box-sizing: border-box; }
+  
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+
+  .wrap {
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin: 0 0 8px 0;
+    color: var(--ink);
+  }
+
+  header p {
+    font-size: 15px;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .menu-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--card);
+    padding: 20px 24px;
+    border-radius: 16px;
+    text-decoration: none;
+    color: var(--ink);
+    border: 1px solid var(--line);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    transition: all 0.2s ease;
+  }
+
+  .menu-item:hover {
+    transform: translateY(-3px);
+    border-color: var(--teal);
+    box-shadow: 0 8px 16px rgba(31, 122, 120, 0.08);
+  }
+
+  .menu-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .menu-tag {
+    align-self: flex-start;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: -0.2px;
+  }
+
+  .tag-ch3 { background: var(--green-soft); color: var(--green); }
+  .tag-ch4 { background: var(--teal-soft); color: var(--teal); }
+
+  .menu-title {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  .arrow {
+    font-size: 18px;
+    color: var(--muted);
+    transition: transform 0.2s ease;
+  }
+
+  .menu-item:hover .arrow {
+    color: var(--teal);
+    transform: translateX(4px);
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <h1>이걸 풀어야지 네 미래가 유우시보다 빛남</h1>
+    <p>단원 선택해서 풀으삼.</p>
+  </header>
+
+  <main class="menu-list">
+    <a href="quiz-ch3.html" class="menu-item">
+      <div class="menu-info">
+        <span class="menu-tag tag-ch3">3단원</span>
+        <span class="menu-title">환경 문제 암기 확인 퀴즈</span>
+      </div>
+      <span class="arrow">➔</span>
+    </a>
+
+    <a href="quiz-ch4-1.html" class="menu-item">
+      <div class="menu-info">
+        <span class="menu-tag tag-ch4">4-1단원</span>
+        <span class="menu-title">세계의 다양한 문화권 퀴즈</span>
+      </div>
+      <span class="arrow">➔</span>
+    </a>
+
+    <a href="quiz-ch4-2.html" class="menu-item">
+      <div class="menu-info">
+        <span class="menu-tag tag-ch4">4-2단원</span>
+        <span class="menu-title">문화 변동과 전통문화의 창조적 계승 퀴즈</span>
+      </div>
+      <span class="arrow">➔</span>
+    </a>
+  </main>
+
+  <footer>
+    <p>© 증제이옌 아자스! 🔥</p>
+  </footer>
+</div>
+
+</body>
+</html>
