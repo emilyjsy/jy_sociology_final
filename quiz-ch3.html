@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>통합사회 3-3단원 · 환경 문제 암기 확인 퀴즈</title>
+<style>
+  :root{
+    --bg:#f6f7f3;
+    --card:#ffffff;
+    --ink:#1f2a24;
+    --muted:#6b7a70;
+    --line:#e3e8e0;
+    --green:#2f7d5b;
+    --green-dark:#205c42;
+    --green-soft:#e7f1ea;
+    --right:#2f7d5b;
+    --right-soft:#e7f3ec;
+    --wrong:#c0473b;
+    --wrong-soft:#fbeceb;
+    --amber:#9a6b15;
+    --amber-soft:#fbf3e2;
+    --tag-mc:#3a6ea5;
+    --tag-sa:#7a5aa6;
+    --tag-ox:#b07a2a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
+    line-height:1.65;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:0 18px 80px;}
+
+  /* Header */
+  header{padding:36px 0 18px;}
+  .eyebrow{font-size:13px;letter-spacing:.04em;color:var(--green);font-weight:700;margin-bottom:6px;}
+  h1{font-size:26px;line-height:1.3;margin:0 0 6px;font-weight:800;letter-spacing:-.01em;}
+  .sub{color:var(--muted);font-size:14px;margin:0;}
+
+  /* Sticky bar */
+  .bar{
+    position:sticky;top:0;z-index:20;background:rgba(246,247,243,.92);
+    backdrop-filter:blur(6px);border-bottom:1px solid var(--line);
+    padding:12px 0;margin-bottom:22px;
+  }
+  .bar-inner{max-width:760px;margin:0 auto;padding:0 18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  .score{font-size:14px;font-weight:700;color:var(--ink);white-space:nowrap;}
+  .score b{color:var(--green);}
+  .progress{flex:1;min-width:120px;height:8px;background:var(--line);border-radius:99px;overflow:hidden;}
+  .progress > i{display:block;height:100%;width:0;background:var(--green);transition:width .35s ease;}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;width:100%;}
+  button{font-family:inherit;cursor:pointer;border:none;}
+  .ctrl{
+    font-size:13px;font-weight:600;padding:8px 13px;border-radius:9px;
+    background:#fff;border:1px solid var(--line);color:var(--ink);transition:.15s;
+  }
+  .ctrl:hover{border-color:var(--green);color:var(--green);}
+  .ctrl.active{background:var(--green);color:#fff;border-color:var(--green);}
+
+  /* Question card */
+  .q{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:20px 20px 18px;margin-bottom:16px;scroll-margin-top:90px;
+  }
+  .q.hide{display:none;}
+  .q-head{display:flex;align-items:center;gap:9px;margin-bottom:12px;flex-wrap:wrap;}
+  .num{
+    font-size:13px;font-weight:800;color:#fff;background:var(--green-dark);
+    width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .tag{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:99px;letter-spacing:.02em;}
+  .tag.mc{color:var(--tag-mc);background:#eaf1f8;}
+  .tag.sa{color:var(--tag-sa);background:#f2ecf8;}
+  .tag.ox{color:var(--tag-ox);background:#f8f0e2;}
+  .q-text{font-size:16.5px;font-weight:600;margin:0 0 14px;letter-spacing:-.01em;}
+  .q-text .blank{color:var(--green);font-weight:800;border-bottom:2px solid var(--green);padding:0 14px;}
+
+  /* Options */
+  .opts{display:flex;flex-direction:column;gap:8px;}
+  .opt{
+    display:flex;gap:10px;align-items:flex-start;padding:11px 13px;border:1px solid var(--line);
+    border-radius:10px;background:#fff;cursor:pointer;transition:.13s;font-size:15px;
+  }
+  .opt:hover{border-color:var(--green);background:var(--green-soft);}
+  .opt.sel{border-color:var(--green);background:var(--green-soft);}
+  .opt .mk{font-weight:800;color:var(--muted);flex-shrink:0;}
+  .opt.sel .mk{color:var(--green);}
+  .opt.correct{border-color:var(--right);background:var(--right-soft);}
+  .opt.correct .mk{color:var(--right);}
+  .opt.incorrect{border-color:var(--wrong);background:var(--wrong-soft);}
+  .opt.incorrect .mk{color:var(--wrong);}
+
+  /* OX */
+  .ox{display:flex;gap:10px;}
+  .ox button{
+    flex:1;padding:14px;border:1px solid var(--line);border-radius:11px;background:#fff;
+    font-size:18px;font-weight:800;color:var(--ink);transition:.13s;
+  }
+  .ox button:hover{border-color:var(--green);background:var(--green-soft);}
+  .ox button.sel{border-color:var(--green);background:var(--green-soft);color:var(--green-dark);}
+  .ox button.correct{border-color:var(--right);background:var(--right-soft);color:var(--right);}
+  .ox button.incorrect{border-color:var(--wrong);background:var(--wrong-soft);color:var(--wrong);}
+
+  /* Short answer */
+  .sa-input{
+    width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    font-size:16px;font-family:inherit;color:var(--ink);background:#fff;
+  }
+  .sa-input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px var(--green-soft);}
+  .sa-input.correct{border-color:var(--right);background:var(--right-soft);}
+  .sa-input.incorrect{border-color:var(--wrong);background:var(--wrong-soft);}
+
+  /* Grade button + result */
+  .grade{
+    margin-top:14px;background:var(--green);color:#fff;font-weight:700;font-size:14px;
+    padding:10px 20px;border-radius:9px;transition:.15s;
+  }
+  .grade:hover{background:var(--green-dark);}
+  .grade:disabled{opacity:.45;cursor:default;}
+
+  .result{margin-top:14px;display:none;}
+  .result.show{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(-3px);}to{opacity:1;transform:none;}}
+  .verdict{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;margin-bottom:10px;}
+  .verdict.ok{color:var(--right);}
+  .verdict.no{color:var(--wrong);}
+  .verdict .ic{font-size:19px;}
+  .ans-line{font-size:14.5px;margin:0 0 10px;}
+  .ans-line .lab{font-weight:800;color:var(--green-dark);}
+  .expl{
+    background:#fafbf9;border:1px solid var(--line);border-left:3px solid var(--green);
+    border-radius:8px;padding:12px 14px;font-size:14.5px;color:#36433b;margin-bottom:10px;
+  }
+  .memo{
+    background:var(--amber-soft);border:1px solid #efe1c2;border-left:3px solid var(--amber);
+    border-radius:8px;padding:12px 14px;font-size:14.5px;color:#6e500f;
+  }
+  .memo .lab{font-weight:800;display:block;margin-bottom:3px;color:var(--amber);}
+  .expl .lab{font-weight:800;display:block;margin-bottom:3px;color:var(--green-dark);}
+
+  /* Done / empty */
+  .empty{text-align:center;color:var(--muted);padding:50px 20px;font-size:15px;}
+  footer{text-align:center;color:var(--muted);font-size:12.5px;margin-top:30px;}
+  @media(max-width:520px){
+    h1{font-size:22px;} .q-text{font-size:15.5px;}
+    .ctrl{flex:1;text-align:center;}
+  }
+</style>
+</head>
+<body>
+<div class="bar">
+  <div class="bar-inner">
+    <span class="score">맞힘 <b id="sCorrect">0</b> / 채점 <span id="sGraded">0</span> · 전체 <span id="sTotal">0</span></span>
+    <div class="progress"><i id="prog"></i></div>
+    <div class="btns">
+      <button class="ctrl" id="btnShuffle">🔀 순서 섞기</button>
+      <button class="ctrl" id="btnWrong">✏️ 오답만 다시 풀기</button>
+      <button class="ctrl" id="btnReveal">👁 정답·해설 보기</button>
+      <button class="ctrl" id="btnReset">↺ 처음부터</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">통합사회 · Ⅲ. 자연환경과 인간</div>
+    <h1>3-3단원 · 환경 문제 해결을 위한 다양한 노력</h1>
+    <p class="sub">답을 고르거나 입력한 뒤 <b>채점</b>을 누르면 정답 여부와 해설·암기 포인트가 나와요. 객관식 16 · 단답형 15 · O/X 15</p>
+  </header>
+  <div id="quiz"></div>
+  <div id="empty" class="empty" style="display:none;"></div>
+  <footer>정지윤 내신 대비 · 교과서 본문 기반 자동 채점 퀴즈</footer>
+</div>
+
+<script>
+/* ===== 문제 데이터 =====
+   type: 'mc'(객관식) | 'sa'(단답형) | 'ox'(O/X)
+   mc: options[], answer(0-based index)
+   sa: answers[](허용 정답 목록), shown(정답 표기)
+   ox: answer('O'|'X')
+*/
+const DATA = [
+  // ---------- 객관식 16 ----------
+  {type:'mc', q:"오늘날 환경 문제가 발생하게 된 근본 원인으로 가장 적절한 것은?",
+   options:[
+     "18세기 산업 혁명 이후 공업이 발달하고 인구가 급증하면서 자원 소비량과 오염 물질 배출량이 늘어났다.",
+     "자연의 자정 능력이 갑자기 강해지면서 오염 물질이 모두 분해되었다.",
+     "의료 기술이 쇠퇴하여 인구가 급격히 감소하였다.",
+     "공업이 사라지고 농업 중심 사회로 되돌아갔다.",
+     "화석 에너지 사용이 줄어들면서 생산력이 낮아졌다."],
+   answer:0,
+   expl:"18세기 산업 혁명으로 공업이 발달해 생산력이 높아지고, 생활 환경 개선·의료 기술 발달로 인구가 급증했어요. 이 과정에서 자원 소비량과 오염 물질 배출량이 늘어 환경 문제가 발생했습니다.",
+   memo:"환경 문제의 출발점 = 18세기 산업 혁명 → 공업 발달·인구 급증 → 자원 소비·오염 물질 배출 증가"},
+
+  {type:'mc', q:"다음 설명에 해당하는 개념은? “오염된 물이나 땅 등이 물리학적·화학적·생물학적 작용으로 저절로 깨끗해지는 능력”",
+   options:["자정 능력","환경 영향 평가","저탄소 녹색 성장","생물종 다양성","탄소 중립"],
+   answer:0,
+   expl:"자연이 스스로 오염을 정화하는 능력을 자정 능력이라고 해요. 오늘날 환경 문제는 이 자정 능력의 한계를 넘어설 정도로 심각하다는 점이 핵심입니다.",
+   memo:"자정 능력 = 자연이 스스로 깨끗해지는 능력. 환경 문제는 이 '한계를 넘어설' 만큼 심각함"},
+
+  {type:'mc', q:"환경 문제의 특징으로 옳지 <u>않은</u> 것은?",
+   options:[
+     "자정 능력의 한계를 넘어설 정도로 심각하다.",
+     "다양한 원인으로 발생해 책임 소재를 명확히 구분하기 어렵다.",
+     "한 번 발생하면 짧은 시간과 적은 비용으로 쉽게 복구할 수 있다.",
+     "지역·국가의 경계를 넘어 인접 지역과 전 지구에 영향을 미친다.",
+     "현세대뿐만 아니라 미래 세대의 생존까지 위협할 만큼 피해가 크다."],
+   answer:2,
+   expl:"환경 문제는 피해를 복구하는 데 시간이 오래 걸리고 비용도 많이 듭니다. ③은 정반대로 서술되어 틀렸어요.",
+   memo:"환경 문제 특징 5가지 ▸ ①자정능력 한계 ②책임 소재 불명확 ③전 지구적 영향 ④미래 세대까지 위협 ⑤복구에 오랜 시간·많은 비용"},
+
+  {type:'mc', q:"미세 먼지에 대한 설명으로 옳은 것은?",
+   options:[
+     "지름이 10㎛보다 작은, 대기 중에 떠다니거나 흩날려 내려오는 먼지이다.",
+     "지름이 10㎛보다 큰 먼지만을 가리킨다.",
+     "고비 사막의 모래가 가라앉는 현상 그 자체를 말한다.",
+     "인체에는 전혀 해롭지 않은 깨끗한 먼지이다.",
+     "항공 산업에는 아무런 영향을 주지 않는다."],
+   answer:0,
+   expl:"미세 먼지는 지름이 10㎛보다 작은 먼지예요. ③은 황사에 대한 설명이고, 미세 먼지는 폐·심장·뇌 질환과 첨단·항공 산업에 모두 악영향을 줍니다.",
+   memo:"미세 먼지 = 지름 10㎛보다 '작은' 먼지 / 황사 = 모래가 날아와 가라앉는 '현상' — 둘을 구분!"},
+
+  {type:'mc', q:"다음 설명에 해당하는 환경 문제는? “중국 몽골고원과 고비 사막 등의 가는 모래가 편서풍을 타고 멀리 날아가 서서히 가라앉는 현상”",
+   options:["황사","산성비","미세 먼지","사막화","열대림 파괴"],
+   answer:0,
+   expl:"중국 몽골고원·고비 사막의 모래가 편서풍을 타고 날아와 가라앉는 현상은 황사입니다.",
+   memo:"황사 키워드 = 몽골고원·고비 사막 + 편서풍 + 모래가 가라앉는 '현상'"},
+
+  {type:'mc', q:"미세 먼지와 황사가 주는 영향으로 옳지 <u>않은</u> 것은?",
+   options:[
+     "폐질환·심장 질환은 물론 치매 같은 뇌 질환에도 영향을 줄 수 있다.",
+     "반도체 등 정밀 제품의 불량률을 높여 첨단 산업에 악영향을 준다.",
+     "태양 빛을 차단해 가시거리를 떨어뜨려 항공 산업에 영향을 준다.",
+     "질산염·황산염·납 등의 오염 물질을 포함하고 있다.",
+     "우리나라 동쪽에서 발생해 남동풍을 타고 이동한다."],
+   answer:4,
+   expl:"미세 먼지와 황사는 우리나라 서쪽에서 발생해 북서풍을 타고 이동합니다. ⑤는 방향이 모두 반대로 서술되어 틀렸어요.",
+   memo:"미세 먼지·황사 이동 = 우리나라 '서쪽'에서 발생 → '북서풍' 타고 이동 / 건강뿐 아니라 첨단·항공 산업에도 피해"},
+
+  {type:'mc', q:"지구 온난화에 대한 설명으로 옳지 <u>않은</u> 것은?",
+   options:[
+     "화석 에너지 소비 증가로 온실가스 배출량이 늘면서 지구 평균 기온이 높아지는 현상이다.",
+     "메탄, 이산화 탄소 등이 대표적인 온실가스이다.",
+     "극지방과 고산 지대의 빙하가 녹아 해수면이 상승한다.",
+     "가뭄·홍수·태풍·폭설 등 기상 이변과 자연재해가 줄어든다.",
+     "해안 저지대와 섬 지역이 침수 피해를 입는다."],
+   answer:3,
+   expl:"지구 온난화로 기상 이변과 자연재해는 오히려 증가하고 피해 규모도 커집니다. ④는 정반대예요.",
+   memo:"지구 온난화 = 온실가스↑ → 평균 기온↑ → 빙하↓·해수면↑·침수 / 기상 이변(가뭄·홍수·태풍·폭설)은 '증가'"},
+
+  {type:'mc', q:"지구 온난화인데도 중위도 지역에 오히려 한파·폭설이 늘어나는 과정으로 옳은 것은?",
+   options:[
+     "북극과 중위도의 기온 차 감소 → 제트 기류 약화 → 극 소용돌이가 남쪽으로 내려옴",
+     "북극과 중위도의 기온 차 증가 → 제트 기류 강화 → 극 소용돌이가 북쪽으로 올라감",
+     "제트 기류가 강해져 극 소용돌이를 극지방에 더 단단히 가둠",
+     "해수면 상승으로 바닷물이 차가워져 한파가 발생함",
+     "오존층 파괴로 자외선이 늘어 겨울이 추워짐"],
+   answer:0,
+   expl:"지구 온난화로 북극과 중위도의 기온 차가 줄면 제트 기류가 약해지고, 약해진 제트 기류를 밀어내며 극 소용돌이가 남하해 한파·폭설이 늘어납니다. 이를 ‘지구 온난화의 역설’이라고 해요.",
+   memo:"지구 온난화의 역설 ▸ 기온 차↓ → 제트 기류 약화 → 극 소용돌이 남하 → 중위도 한파·폭설↑"},
+
+  {type:'mc', q:"산성비에 대한 설명으로 옳은 것은?",
+   options:[
+     "공장 매연·자동차 배기가스 등이 빗물과 결합해 내리는 비로, 삼림 파괴·건축물 부식·토양 오염을 일으킨다.",
+     "지름 10㎛보다 작은 먼지가 비처럼 내리는 현상이다.",
+     "극지방 빙하가 녹아 해수면이 상승하는 현상이다.",
+     "적도 부근 열대림이 농경지로 개간되는 현상이다.",
+     "오존층이 두꺼워져 자외선이 차단되는 현상이다."],
+   answer:0,
+   expl:"산성비는 공장 매연·자동차 배기가스 등 오염 물질이 빗물과 결합해 산성도가 높아진 비예요. 삼림·건축물·조각상을 부식시키고 토양 오염도 일으킵니다.",
+   memo:"산성비 = 매연·배기가스 + 빗물 결합 → 삼림 파괴·건축물·조각상 부식·토양 오염 (공업 지대에서 바람 타고 멀리 퍼짐)"},
+
+  {type:'mc', q:"오존층 파괴와 관련된 설명으로 옳지 <u>않은</u> 것은?",
+   options:[
+     "프레온 가스로 알려진 염화 플루오린화 탄소(CFCs)의 사용 증가가 원인이다.",
+     "오존층이 파괴되면 지상에 도달하는 자외선이 증가한다.",
+     "자외선이 늘어 피부암·안과 질환 등의 피해가 커진다.",
+     "오존층은 자외선을 흡수해 지상의 생물체를 보호하는 역할을 한다.",
+     "CFCs는 산성비를 일으키는 대표적인 물질이다."],
+   answer:4,
+   expl:"CFCs(프레온 가스)는 오존층을 파괴하는 물질이에요. 산성비의 주원인은 매연·배기가스 속 오염 물질이므로 ⑤는 틀렸습니다.",
+   memo:"오존층 파괴 = CFCs(프레온 가스) 때문 → 자외선↑ → 피부암·안과 질환 / 오존층은 지상 20~25km, 자외선 차단막 역할"},
+
+  {type:'mc', q:"사막화에 대한 설명으로 옳은 것은?",
+   options:[
+     "건조·반건조 지역에서 토양이 생산 능력을 잃고 황폐화되어 사막이 확대되는 현상이다.",
+     "적도 부근 열대림이 농경지로 바뀌는 현상이다.",
+     "빙하가 녹아 해수면이 상승하는 현상이다.",
+     "오염 물질이 빗물과 결합해 비로 내리는 현상이다.",
+     "바다로 쓰레기가 유입되어 섬을 이루는 현상이다."],
+   answer:0,
+   expl:"사막화는 건조·반건조 지역의 토양이 생산력을 잃고 황폐화되어 사막이 넓어지는 현상이에요. 극심한 가뭄과 과도한 개발(경지 개간·방목)이 원인입니다.",
+   memo:"사막화 = 건조·반건조 지역 토양 황폐화 → 사막 확대. 결과: 물 부족·식량 부족·황사 심화"},
+
+  {type:'mc', q:"열대림 파괴가 가져오는 결과로 옳지 <u>않은</u> 것은?",
+   options:[
+     "동물의 서식지가 사라져 생물종 다양성이 감소한다.",
+     "이산화 탄소 배출량이 늘고 산소 공급은 줄어든다.",
+     "지구 온난화의 진행 속도가 빨라진다.",
+     "농경지·목초지 조성을 위한 무분별한 벌목이 원인이다.",
+     "오존층이 두꺼워져 지상의 자외선이 차단된다."],
+   answer:4,
+   expl:"열대림 파괴는 오존층과 직접 관련이 없어요. 벌목으로 서식지가 줄어 생물종 다양성이 감소하고, 이산화 탄소는 늘고 산소는 줄어 온난화가 빨라집니다.",
+   memo:"열대림 파괴 → 서식지 소멸·생물종 다양성↓ + CO₂ 배출↑·산소↓ → 지구 온난화 가속"},
+
+  {type:'mc', q:"세계 주요 환경 문제와 대표 사례 지역의 연결이 옳지 <u>않은</u> 것은?",
+   options:[
+     "산성비로 파괴된 산림 — 독일",
+     "사막화된 아랄해 — 우즈베키스탄",
+     "무분별한 벌목으로 파괴되는 열대림 — 가봉",
+     "해수면 상승으로 침수 위기의 가옥 — 키리바시",
+     "생활 쓰레기로 오염된 해양 — 독일"],
+   answer:4,
+   expl:"생활 쓰레기로 오염된 해양의 대표 사례는 브라질이에요. 독일은 산성비로 파괴된 산림 사례입니다.",
+   memo:"사례 매칭 ▸ 산성비-독일 / 사막화 아랄해-우즈베키스탄 / 열대림-가봉 / 침수-키리바시 / 해양 오염-브라질"},
+
+  {type:'mc', q:"생활 쓰레기로 오염된 해양(브라질)에서 발생하는 피해로 옳지 <u>않은</u> 것은?",
+   options:["해양 생태계 파괴","중금속 중독","수인성 전염병","원유·생활 하수·공장 폐수가 원인","오존층 파괴"],
+   answer:4,
+   expl:"해양 오염의 원인은 유출된 원유·생활 쓰레기·생활 하수·공장 폐수예요. 그 결과 생태계 파괴, 중금속 중독, 수인성 전염병이 생깁니다. 오존층 파괴와는 관련이 없어요.",
+   memo:"해양 오염 원인 = 원유·생활 쓰레기·생활 하수·공장 폐수 / 결과 = 생태계 파괴·중금속 중독·수인성 전염병"},
+
+  {type:'mc', q:"환경 문제 해결을 위한 ‘주체-노력’ 연결이 옳지 <u>않은</u> 것은?",
+   options:[
+     "정부 — 환경 영향 평가 실시",
+     "기업 — 환경 오염 방지 시설 설치",
+     "시민 단체 — 시민운동·환경 보호 캠페인",
+     "개인 — 생태시민임을 인식하고 녹색 소비 실천",
+     "개인 — 환경 영향 평가 실시와 저탄소 녹색 성장 추진"],
+   answer:4,
+   expl:"환경 영향 평가와 저탄소 녹색 성장 추진은 ‘정부’의 노력이에요. 개인의 노력은 생태시민 인식·녹색 소비 실천입니다.",
+   memo:"주체별 노력 ▸ 정부=환경 영향 평가·저탄소 녹색 성장 / 기업=오염 방지 시설·노후 시설 정비 / 시민 단체=시민운동·캠페인 / 개인=생태시민 인식·녹색 소비"},
+
+  {type:'mc', q:"생태시민으로서 ‘개인’이 할 수 있는 노력으로 보기 <u>어려운</u> 것은?",
+   options:[
+     "대중교통을 이용하기",
+     "재활용품을 사용하고 쓰레기 분리배출 생활화하기",
+     "정부의 환경 정책·제도에 관심을 갖고 참여하기",
+     "아나바다·플로깅·나무 심기 활동에 참여하기",
+     "환경 오염 방지 시설을 설치하고 노후 시설을 정비하기"],
+   answer:4,
+   expl:"환경 오염 방지 시설 설치와 노후 시설 정비는 ‘기업’의 노력이에요. 나머지는 개인(생태시민)이 실천할 수 있는 노력입니다.",
+   memo:"개인의 노력 = 대중교통·분리배출·녹색 소비·플로깅 등 생활 실천 / 시설 설치·정비는 '기업'의 몫"},
+
+  // ---------- 단답형 15 ----------
+  {type:'sa', q:"자연은 본래 어느 정도 [   ]을 지니고 있지만, 오늘날 대부분의 환경 문제는 그 한계를 넘어설 정도로 심각하다.",
+   answers:["자정능력","자정 능력"], shown:"자정 능력",
+   expl:"자정 능력은 자연이 물리학적·화학적·생물학적 작용으로 스스로 깨끗해지는 능력이에요.",
+   memo:"환경 문제 = 자정 능력의 '한계를 넘어선' 상태"},
+
+  {type:'sa', q:"[   ]세기에 일어난 산업 혁명으로 공업이 크게 발달하여 생산력이 높아졌다.",
+   answers:["18","18세기","십팔"], shown:"18(세기)",
+   expl:"환경 문제의 출발점은 18세기 산업 혁명입니다.",
+   memo:"산업 혁명 = 18세기 → 공업 발달·인구 급증"},
+
+  {type:'sa', q:"[   ]는 화석 에너지의 소비 증가로 온실가스 배출량이 늘면서 지구의 평균 기온이 높아지는 현상이다.",
+   answers:["지구온난화","지구 온난화","온난화"], shown:"지구 온난화",
+   expl:"메탄·이산화 탄소 등 온실가스 증가가 지구 온난화의 원인이에요.",
+   memo:"지구 온난화 원인 = 화석 에너지 소비↑ → 온실가스(메탄·CO₂)↑"},
+
+  {type:'sa', q:"미세 먼지는 대기 중에 떠다니거나 흩날려 내려오는 먼지 중 지름이 [   ]㎛보다 작은 것이다.",
+   answers:["10","10마이크로미터","십"], shown:"10",
+   expl:"미세 먼지의 기준은 지름 10㎛예요. (㎛=마이크로미터)",
+   memo:"미세 먼지 = 지름 10㎛보다 '작은' 먼지"},
+
+  {type:'sa', q:"[   ]는 중국 몽골고원과 고비 사막 등에 있는 가는 모래가 편서풍을 타고 멀리 날아가 서서히 가라앉는 현상이다.",
+   answers:["황사"], shown:"황사",
+   expl:"황사는 사막의 모래가 편서풍을 타고 날아와 가라앉는 현상입니다.",
+   memo:"황사 = 몽골고원·고비 사막 모래 + 편서풍"},
+
+  {type:'sa', q:"미세 먼지와 황사는 [   ]풍을 타고 우리나라까지 이동한다.",
+   answers:["북서","북서풍"], shown:"북서(풍)",
+   expl:"미세 먼지와 황사는 우리나라 서쪽에서 발생해 북서풍을 타고 들어옵니다.",
+   memo:"이동 = 서쪽 발생 + '북서풍'"},
+
+  {type:'sa', q:"프레온 가스로 알려진 [   ]의 사용 증가로 오존층이 파괴된다.",
+   answers:["CFCs","cfcs","염화플루오린화탄소","염화 플루오린화 탄소","염화플루오린화탄소(CFCs)","프레온가스","프레온 가스"], shown:"염화 플루오린화 탄소(CFCs)",
+   expl:"CFCs(프레온 가스)는 냉장고·에어컨 냉매 등에 쓰이며 오존층을 파괴하는 물질이에요.",
+   memo:"오존층 파괴 물질 = CFCs(염화 플루오린화 탄소, 프레온 가스)"},
+
+  {type:'sa', q:"오존층은 지상에서 [   ]km 상공에 있는, 오존의 농도가 높은 대기층이다. (예: 20~25)",
+   answers:["20~25","20-25","2025","20에서25","20~25km"], shown:"20~25",
+   expl:"오존층은 지상 20~25km 상공에 있으며 자외선을 흡수해 생물체를 보호합니다.",
+   memo:"오존층 위치 = 지상 20~25km, 자외선 차단막"},
+
+  {type:'sa', q:"[   ]는 건조·반건조 지역에서 토양이 생산 능력을 상실하고 황폐화되어 사막이 확대되는 현상이다.",
+   answers:["사막화"], shown:"사막화",
+   expl:"가뭄과 과도한 개발(경지 개간·방목)로 사막이 넓어지는 현상이에요.",
+   memo:"사막화 = 토양 황폐화 → 사막 확대 → 물·식량 부족, 황사 심화"},
+
+  {type:'sa', q:"극지방 상공에 있는 강한 소용돌이로, 지구 온난화로 제트 기류가 약해지면 남쪽으로 내려오는 것은 [   ]이다.",
+   answers:["극소용돌이","극 소용돌이"], shown:"극 소용돌이",
+   expl:"제트 기류가 약해지면 극 소용돌이가 남하해 중위도에 한파·폭설을 일으켜요.",
+   memo:"극 소용돌이 남하 → 중위도 한파·폭설↑ (지구 온난화의 역설)"},
+
+  {type:'sa', q:"대류권 상부의 강한 공기 흐름으로, 평소 극 소용돌이를 가두는 역할을 하는 것은 [   ]이다.",
+   answers:["제트기류","제트 기류"], shown:"제트 기류",
+   expl:"제트 기류는 좁은 영역에 수평으로 집중하는 강한 기류로, 극 소용돌이를 극지방에 가둡니다.",
+   memo:"제트 기류 = 극 소용돌이를 가두는 '울타리'. 약해지면 소용돌이 남하"},
+
+  {type:'sa', q:"정부는 [   ] 평가를 실시하고 저탄소 녹색 성장을 추진하여 환경 문제 해결에 힘쓴다.",
+   answers:["환경영향","환경 영향"], shown:"환경 영향",
+   expl:"환경 영향 평가와 저탄소 녹색 성장 추진은 정부의 대표적인 노력이에요.",
+   memo:"정부 = 환경 영향 평가 + 저탄소 녹색 성장"},
+
+  {type:'sa', q:"개인은 [   ]임을 인식하고 녹색 소비를 실천해야 한다.",
+   answers:["생태시민","생태 시민"], shown:"생태시민",
+   expl:"생태시민은 환경에 대한 책임 의식을 갖고 일상에서 녹색 소비를 실천하는 시민이에요.",
+   memo:"개인의 노력 = '생태시민' 인식 + 녹색 소비 실천"},
+
+  {type:'sa', q:"무분별한 벌목으로 [   ]이 파괴되면서 생물종 다양성이 감소하였다.",
+   answers:["열대림","열대우림"], shown:"열대림",
+   expl:"열대림이 농경지·목초지로 개간되면서 서식지가 사라지고 생물종 다양성이 줄어들어요.",
+   memo:"열대림 파괴 → 생물종 다양성↓, 지구 온난화 가속"},
+
+  {type:'sa', q:"산성비는 공장의 매연, 자동차의 [   ] 등이 빗물과 결합하여 발생한다.",
+   answers:["배기가스","배기 가스"], shown:"배기가스",
+   expl:"매연과 자동차 배기가스 속 오염 물질이 빗물과 결합해 산성도가 높은 비가 됩니다.",
+   memo:"산성비 원인 = 공장 매연 + 자동차 배기가스 + 빗물"},
+
+  // ---------- O/X 15 ----------
+  {type:'ox', q:"환경 문제는 원인이 다양해 책임 소재를 명확히 구분하기 어렵다.", answer:'O',
+   expl:"맞아요. 환경 문제는 여러 원인이 얽혀 있어 누구의 책임인지 명확히 가리기 어렵습니다.",
+   memo:"환경 문제 특징 = 책임 소재 '불명확'"},
+
+  {type:'ox', q:"환경 문제는 발생한 지역·국가의 경계를 넘어 전 지구에 영향을 미칠 만큼 피해 범위가 넓다.", answer:'O',
+   expl:"맞아요. 미세 먼지·황사처럼 국경을 넘어 인접 국가와 전 지구에 피해를 줍니다.",
+   memo:"환경 문제 = 국경 넘는 '전 지구적' 문제"},
+
+  {type:'ox', q:"환경 문제는 한 번 발생해도 짧은 시간과 적은 비용으로 쉽게 복구할 수 있다.", answer:'X',
+   expl:"틀려요. 환경 문제는 복구에 오랜 시간이 걸리고 많은 비용이 듭니다.",
+   memo:"복구 = 오랜 시간 + 많은 비용 (쉽게 복구 X)"},
+
+  {type:'ox', q:"미세 먼지는 지름이 10㎛보다 큰 먼지를 말한다.", answer:'X',
+   expl:"틀려요. 미세 먼지는 지름이 10㎛보다 ‘작은’ 먼지입니다.",
+   memo:"미세 먼지 = 10㎛보다 '작은' 것"},
+
+  {type:'ox', q:"황사는 우리나라에서 발생해 중국으로 이동하는 현상이다.", answer:'X',
+   expl:"틀려요. 황사는 중국 몽골고원·고비 사막에서 발생해 편서풍을 타고 우리나라로 이동합니다.",
+   memo:"황사 방향 = 중국 → 우리나라 (반대 아님)"},
+
+  {type:'ox', q:"지구 온난화로 극지방·고산 지대의 빙하가 녹아 해수면이 상승한다.", answer:'O',
+   expl:"맞아요. 빙하가 녹으면 해수면이 상승해 해안 저지대·섬 지역이 침수됩니다.",
+   memo:"온난화 → 빙하↓ → 해수면↑ → 침수 피해"},
+
+  {type:'ox', q:"지구 온난화로 기온이 오르면 중위도 지역의 겨울은 항상 따뜻해진다.", answer:'X',
+   expl:"틀려요. 극 소용돌이가 남하하면서 오히려 한파·폭설이 늘 수 있어요. 이것이 ‘지구 온난화의 역설’입니다.",
+   memo:"지구 온난화의 역설 = 중위도 겨울이 오히려 한파·폭설↑"},
+
+  {type:'ox', q:"산성비는 건축물과 조각상을 부식시키고 토양 오염도 일으킨다.", answer:'O',
+   expl:"맞아요. 산성비는 삼림 파괴뿐 아니라 건축물·조각상 부식, 토양 오염을 일으킵니다.",
+   memo:"산성비 피해 = 삼림 + 건축물·조각상 부식 + 토양 오염"},
+
+  {type:'ox', q:"오존층이 파괴되면 지상에 도달하는 자외선이 감소한다.", answer:'X',
+   expl:"틀려요. 오존층은 자외선을 흡수하므로, 파괴되면 자외선이 ‘증가’해 피부암·안과 질환이 늘어납니다.",
+   memo:"오존층 파괴 → 자외선 '증가' → 피부암·안과 질환"},
+
+  {type:'ox', q:"사막화가 진행되면 물 부족·식량 부족 문제가 생기고 황사도 심해진다.", answer:'O',
+   expl:"맞아요. 아랄해 사례처럼 사막화는 물·식량 부족과 황사 악화를 불러옵니다.",
+   memo:"사막화 결과 = 물 부족 + 식량 부족 + 황사 심화"},
+
+  {type:'ox', q:"열대림이 파괴되면 이산화 탄소 배출이 줄어 지구 온난화가 완화된다.", answer:'X',
+   expl:"틀려요. 열대림이 파괴되면 이산화 탄소 배출은 늘고 산소 공급은 줄어 지구 온난화가 ‘심화’됩니다.",
+   memo:"열대림 파괴 → CO₂↑·산소↓ → 온난화 '심화'"},
+
+  {type:'ox', q:"환경 오염 방지 시설 설치와 노후 시설 정비는 ‘기업’의 노력에 해당한다.", answer:'O',
+   expl:"맞아요. 시설 설치·정비는 기업이 실천하는 대표적인 노력이에요.",
+   memo:"기업 = 오염 방지 시설 설치 + 노후 시설 정비"},
+
+  {type:'ox', q:"환경 영향 평가 실시와 저탄소 녹색 성장 추진은 ‘개인’의 노력에 해당한다.", answer:'X',
+   expl:"틀려요. 환경 영향 평가와 저탄소 녹색 성장은 ‘정부’의 노력입니다.",
+   memo:"정부 = 환경 영향 평가 + 저탄소 녹색 성장 (개인 아님)"},
+
+  {type:'ox', q:"시민 단체는 시민운동과 환경 보호 캠페인 등으로 환경 문제 해결에 참여한다.", answer:'O',
+   expl:"맞아요. 시민 단체는 시민운동·캠페인으로 환경 문제 해결에 힘씁니다.",
+   memo:"시민 단체 = 시민운동 + 환경 보호 캠페인"},
+
+  {type:'ox', q:"미세 먼지와 황사는 반도체 등 정밀 제품의 불량률을 높여 첨단 산업에 악영향을 준다.", answer:'O',
+   expl:"맞아요. 건강뿐 아니라 첨단 산업(불량률↑)과 항공 산업(가시거리↓)에도 피해를 줍니다.",
+   memo:"미세 먼지·황사 = 건강 + 첨단 산업(불량률↑) + 항공 산업(가시거리↓)"}
+];
+
+/* ===== 상태 ===== */
+let order = DATA.map((_,i)=>i);
+const state = {}; // idx -> {picked, graded, correct}
+const MARKS = ['①','②','③','④','⑤'];
+
+function norm(s){
+  return (s||'').toString().trim().toLowerCase()
+    .replace(/\s+/g,'').replace(/[().,·]/g,'');
+}
+
+function render(list){
+  const root = document.getElementById('quiz');
+  const empty = document.getElementById('empty');
+  root.innerHTML='';
+  if(list.length===0){
+    empty.style.display='block';
+    empty.textContent='표시할 문제가 없어요. 위의 “처음부터”를 눌러 다시 시작해 보세요.';
+    updateScore();
+    return;
+  }
+  empty.style.display='none';
+  list.forEach((idx,pos)=>{
+    root.appendChild(buildCard(idx,pos+1));
+  });
+  updateScore();
+}
+
+function buildCard(idx, displayNo){
+  const item = DATA[idx];
+  const st = state[idx] || (state[idx]={picked:null,graded:false,correct:false});
+  const card = document.createElement('div');
+  card.className='q'; card.dataset.idx=idx;
+  card.id='q'+idx;
+
+  const tagMap={mc:['mc','객관식'],sa:['sa','단답형'],ox:['ox','O / X']};
+  const [tagCls,tagTxt]=tagMap[item.type];
+
+  let qhtml = item.q.replace(/\[\s*\]/g,'<span class="blank">　　</span>');
+
+  let body='';
+  if(item.type==='mc'){
+    body='<div class="opts">'+item.options.map((o,i)=>
+      `<div class="opt" data-i="${i}"><span class="mk">${MARKS[i]}</span><span>${o}</span></div>`).join('')+'</div>';
+  }else if(item.type==='ox'){
+    body='<div class="ox"><button data-v="O">O</button><button data-v="X">X</button></div>';
+  }else{
+    body='<input class="sa-input" type="text" placeholder="정답을 입력하세요" autocomplete="off">';
+  }
+
+  card.innerHTML=`
+    <div class="q-head">
+      <span class="num">${displayNo}</span>
+      <span class="tag ${tagCls}">${tagTxt}</span>
+    </div>
+    <p class="q-text">${qhtml}</p>
+    ${body}
+    <button class="grade">채점하기</button>
+    <div class="result"></div>`;
+
+  // interactions
+  if(item.type==='mc'){
+    card.querySelectorAll('.opt').forEach(el=>{
+      el.addEventListener('click',()=>{
+        if(st.graded) return;
+        card.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+        el.classList.add('sel'); st.picked=+el.dataset.i;
+      });
+    });
+  }else if(item.type==='ox'){
+    card.querySelectorAll('.ox button').forEach(el=>{
+      el.addEventListener('click',()=>{
+        if(st.graded) return;
+        card.querySelectorAll('.ox button').forEach(b=>b.classList.remove('sel'));
+        el.classList.add('sel'); st.picked=el.dataset.v;
+      });
+    });
+  }else{
+    const inp=card.querySelector('.sa-input');
+    inp.addEventListener('input',()=>{ st.picked=inp.value; });
+    inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); card.querySelector('.grade').click(); }});
+  }
+
+  card.querySelector('.grade').addEventListener('click',()=>gradeOne(idx,card));
+
+  if(st.graded) applyGraded(idx,card,true);
+  return card;
+}
+
+function gradeOne(idx,card){
+  const item=DATA[idx];
+  const st=state[idx];
+  if(st.picked===null || st.picked===undefined || (item.type==='sa' && !norm(st.picked))){
+    const inp=card.querySelector('.sa-input');
+    if(item.type==='sa'&&inp){ inp.focus(); inp.placeholder='먼저 답을 입력하세요'; }
+    card.querySelector('.grade').animate(
+      [{transform:'translateX(0)'},{transform:'translateX(-4px)'},{transform:'translateX(4px)'},{transform:'translateX(0)'}],
+      {duration:220});
+    return;
+  }
+  let correct=false;
+  if(item.type==='mc') correct = (+st.picked===item.answer);
+  else if(item.type==='ox') correct = (st.picked===item.answer);
+  else correct = item.answers.some(a=>norm(a)===norm(st.picked));
+  st.graded=true; st.correct=correct;
+  applyGraded(idx,card,false);
+  updateScore();
+}
+
+function applyGraded(idx,card,silent){
+  const item=DATA[idx]; const st=state[idx];
+
+  if(item.type==='mc'){
+    card.querySelectorAll('.opt').forEach(el=>{
+      el.style.cursor='default';
+      const i=+el.dataset.i;
+      if(i===item.answer) el.classList.add('correct');
+      if(i===+st.picked && !st.correct) el.classList.add('incorrect');
+    });
+  }else if(item.type==='ox'){
+    card.querySelectorAll('.ox button').forEach(el=>{
+      el.style.cursor='default';
+      if(el.dataset.v===item.answer) el.classList.add('correct');
+      if(el.dataset.v===st.picked && !st.correct) el.classList.add('incorrect');
+    });
+  }else{
+    const inp=card.querySelector('.sa-input');
+    if(inp){ inp.readOnly=true; inp.classList.add(st.correct?'correct':'incorrect');
+      if(st.picked!==undefined) inp.value=st.picked; }
+  }
+  const g=card.querySelector('.grade'); g.disabled=true; g.textContent='채점 완료';
+
+  const ansShown = item.type==='mc' ? MARKS[item.answer]+' '+item.options[item.answer]
+                 : item.type==='ox' ? item.answer
+                 : item.shown;
+  const res=card.querySelector('.result');
+  res.innerHTML=`
+    <div class="verdict ${st.correct?'ok':'no'}">
+      <span class="ic">${st.correct?'⭕':'❌'}</span>${st.correct?'정답이에요!':'오답이에요'}
+    </div>
+    <p class="ans-line"><span class="lab">정답</span> · ${ansShown}</p>
+    <div class="expl"><span class="lab">해설</span>${item.expl}</div>
+    <div class="memo"><span class="lab">📌 암기 포인트</span>${item.memo}</div>`;
+  res.classList.add('show');
+}
+
+function updateScore(){
+  const graded=Object.values(state).filter(s=>s.graded).length;
+  const correct=Object.values(state).filter(s=>s.graded&&s.correct).length;
+  document.getElementById('sCorrect').textContent=correct;
+  document.getElementById('sGraded').textContent=graded;
+  document.getElementById('sTotal').textContent=DATA.length;
+  document.getElementById('prog').style.width=(graded/DATA.length*100)+'%';
+}
+
+/* ===== 컨트롤 ===== */
+document.getElementById('btnShuffle').addEventListener('click',function(){
+  for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
+  this.classList.add('active'); setTimeout(()=>this.classList.remove('active'),400);
+  render(order); window.scrollTo({top:0,behavior:'smooth'});
+});
+
+document.getElementById('btnWrong').addEventListener('click',function(){
+  const wrong=order.filter(i=>state[i]&&state[i].graded&&!state[i].correct);
+  if(wrong.length===0){
+    const empty=document.getElementById('empty');
+    document.getElementById('quiz').innerHTML='';
+    empty.style.display='block';
+    empty.textContent='틀린 문제가 없어요! 👏 채점한 문제를 모두 맞혔거나, 아직 틀린 문제가 없습니다.';
+    return;
+  }
+  wrong.forEach(i=>{ state[i]={picked:null,graded:false,correct:false}; }); // 다시 풀도록 초기화
+  render(wrong); window.scrollTo({top:0,behavior:'smooth'});
+});
+
+document.getElementById('btnReveal').addEventListener('click',function(){
+  const reveal=!this.classList.contains('active');
+  this.classList.toggle('active',reveal);
+  document.querySelectorAll('.q').forEach(card=>{
+    const idx=+card.dataset.idx; const item=DATA[idx];
+    if(reveal){
+      if(!state[idx]) state[idx]={picked:null,graded:false,correct:false};
+      // 정답을 자동 선택해 보여주기 (채점 상태로 전환)
+      if(item.type==='mc') state[idx].picked=item.answer;
+      else if(item.type==='ox') state[idx].picked=item.answer;
+      else state[idx].picked=item.shown;
+      state[idx].graded=true; state[idx].correct=true;
+      // 다시 그려서 정답 표시
+      const fresh=buildCard(idx, card.querySelector('.num').textContent);
+      card.replaceWith(fresh);
+    }
+  });
+  if(reveal){ this.textContent='👁 정답 가리기'; }
+  else { this.textContent='👁 정답·해설 보기'; render(order); }
+  updateScore();
+});
+
+document.getElementById('btnReset').addEventListener('click',function(){
+  if(!confirm('모든 답과 채점 기록을 지우고 처음부터 다시 풀까요?')) return;
+  for(const k in state) delete state[k];
+  order=DATA.map((_,i)=>i);
+  document.getElementById('btnReveal').classList.remove('active');
+  document.getElementById('btnReveal').textContent='👁 정답·해설 보기';
+  render(order); window.scrollTo({top:0,behavior:'smooth'});
+});
+
+render(order);
+</script>
+</body>
+</html>

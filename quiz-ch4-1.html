@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>통합사회 4-1단원 · 세계의 다양한 문화권 퀴즈</title>
+<style>
+  :root{
+    --bg:#f4f6f7;
+    --card:#ffffff;
+    --ink:#1d2b2e;
+    --muted:#65787c;
+    --line:#e1e8e9;
+    --teal:#1f7a78;
+    --teal-dark:#155c5a;
+    --teal-soft:#e4f1f0;
+    --right:#1f7a78;
+    --right-soft:#e4f1f0;
+    --wrong:#c0473b;
+    --wrong-soft:#fbeceb;
+    --amber:#9a6b15;
+    --amber-soft:#fbf3e2;
+    --tag-mc:#3a6ea5;
+    --tag-sa:#7a5aa6;
+    --tag-ox:#b07a2a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
+    line-height:1.65;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:680px;margin:0 auto;padding:0 18px 60px;}
+
+  header{padding:30px 0 16px;}
+  .eyebrow{font-size:13px;letter-spacing:.04em;color:var(--teal);font-weight:700;margin-bottom:6px;}
+  h1{font-size:24px;line-height:1.3;margin:0 0 6px;font-weight:800;letter-spacing:-.01em;}
+  .sub{color:var(--muted);font-size:14px;margin:0;}
+
+  /* progress bar */
+  .topbar{display:flex;align-items:center;gap:12px;margin:6px 0 18px;}
+  .pmeta{font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap;}
+  .pmeta b{color:var(--teal);}
+  .progress{flex:1;height:8px;background:var(--line);border-radius:99px;overflow:hidden;}
+  .progress > i{display:block;height:100%;width:0;background:var(--teal);transition:width .3s ease;border-radius:99px;}
+  .shuffle{
+    font-size:12.5px;font-weight:600;padding:7px 12px;border-radius:8px;cursor:pointer;
+    background:#fff;border:1px solid var(--line);color:var(--ink);transition:.15s;white-space:nowrap;
+  }
+  .shuffle:hover{border-color:var(--teal);color:var(--teal);}
+  button{font-family:inherit;cursor:pointer;border:none;}
+
+  /* card */
+  .q{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 22px 20px;}
+  .q-head{display:flex;align-items:center;gap:9px;margin-bottom:14px;flex-wrap:wrap;}
+  .num{font-size:13px;font-weight:800;color:#fff;background:var(--teal-dark);min-width:30px;height:26px;padding:0 8px;border-radius:7px;display:flex;align-items:center;justify-content:center;}
+  .tag{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:99px;}
+  .tag.mc{color:var(--tag-mc);background:#eaf1f8;}
+  .tag.sa{color:var(--tag-sa);background:#f2ecf8;}
+  .tag.ox{color:var(--tag-ox);background:#f8f0e2;}
+  .q-text{font-size:17px;font-weight:600;margin:0 0 16px;letter-spacing:-.01em;line-height:1.55;}
+  .q-text .blank{color:var(--teal);font-weight:800;border-bottom:2px solid var(--teal);padding:0 16px;}
+
+  .opts{display:flex;flex-direction:column;gap:9px;}
+  .opt{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border:1px solid var(--line);border-radius:11px;background:#fff;cursor:pointer;transition:.13s;font-size:15px;}
+  .opt:hover{border-color:var(--teal);background:var(--teal-soft);}
+  .opt.sel{border-color:var(--teal);background:var(--teal-soft);}
+  .opt .mk{font-weight:800;color:var(--muted);flex-shrink:0;}
+  .opt.sel .mk{color:var(--teal);}
+  .opt.correct{border-color:var(--right);background:var(--right-soft);}
+  .opt.correct .mk{color:var(--right);}
+  .opt.incorrect{border-color:var(--wrong);background:var(--wrong-soft);}
+  .opt.incorrect .mk{color:var(--wrong);}
+
+  .ox{display:flex;gap:10px;}
+  .ox button{flex:1;padding:16px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:19px;font-weight:800;color:var(--ink);transition:.13s;}
+  .ox button:hover{border-color:var(--teal);background:var(--teal-soft);}
+  .ox button.sel{border-color:var(--teal);background:var(--teal-soft);color:var(--teal-dark);}
+  .ox button.correct{border-color:var(--right);background:var(--right-soft);color:var(--right);}
+  .ox button.incorrect{border-color:var(--wrong);background:var(--wrong-soft);color:var(--wrong);}
+
+  .sa-input{width:100%;padding:13px 15px;border:1px solid var(--line);border-radius:11px;font-size:16px;font-family:inherit;color:var(--ink);background:#fff;}
+  .sa-input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-soft);}
+  .sa-input.correct{border-color:var(--right);background:var(--right-soft);}
+  .sa-input.incorrect{border-color:var(--wrong);background:var(--wrong-soft);}
+
+  /* result */
+  .result{margin-top:16px;display:none;}
+  .result.show{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(-3px);}to{opacity:1;transform:none;}}
+  .verdict{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;margin-bottom:10px;}
+  .verdict.ok{color:var(--right);} .verdict.no{color:var(--wrong);}
+  .verdict .ic{font-size:19px;}
+  .ans-line{font-size:14.5px;margin:0 0 10px;}
+  .ans-line .lab{font-weight:800;color:var(--teal-dark);}
+  .expl{background:#fafbfb;border:1px solid var(--line);border-left:3px solid var(--teal);border-radius:8px;padding:12px 14px;font-size:14.5px;color:#33403f;margin-bottom:10px;}
+  .expl .lab{font-weight:800;display:block;margin-bottom:3px;color:var(--teal-dark);}
+  .memo{background:var(--amber-soft);border:1px solid #efe1c2;border-left:3px solid var(--amber);border-radius:8px;padding:12px 14px;font-size:14.5px;color:#6e500f;}
+  .memo .lab{font-weight:800;display:block;margin-bottom:3px;color:var(--amber);}
+
+  /* nav */
+  .nav{display:flex;gap:10px;margin-top:18px;align-items:center;}
+  .prev{font-size:14px;font-weight:600;padding:11px 16px;border-radius:10px;background:#fff;border:1px solid var(--line);color:var(--muted);transition:.15s;}
+  .prev:hover:not(:disabled){border-color:var(--teal);color:var(--teal);}
+  .prev:disabled{opacity:.4;cursor:default;}
+  .primary{flex:1;font-size:15px;font-weight:700;padding:13px;border-radius:11px;background:var(--teal);color:#fff;transition:.15s;}
+  .primary:hover{background:var(--teal-dark);}
+
+  /* result screen */
+  .summary{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:30px 24px;text-align:center;}
+  .score-big{font-size:46px;font-weight:800;color:var(--teal);line-height:1;margin:6px 0;}
+  .score-label{font-size:15px;color:var(--muted);font-weight:600;}
+  .ring{width:120px;height:120px;margin:8px auto 14px;position:relative;}
+  .ring svg{transform:rotate(-90deg);}
+  .ring .pct{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .ring .pct b{font-size:30px;font-weight:800;color:var(--teal);line-height:1;}
+  .ring .pct span{font-size:12px;color:var(--muted);}
+  .breakdown{display:flex;gap:10px;justify-content:center;margin:18px 0 6px;flex-wrap:wrap;}
+  .bd{background:#fafbfb;border:1px solid var(--line);border-radius:10px;padding:10px 16px;min-width:90px;}
+  .bd .t{font-size:12px;color:var(--muted);font-weight:600;}
+  .bd .v{font-size:17px;font-weight:800;color:var(--ink);margin-top:2px;}
+  .summary-msg{font-size:15px;color:var(--ink);margin:16px 0 6px;font-weight:600;}
+  .sum-btns{display:flex;flex-direction:column;gap:9px;margin-top:20px;}
+  .sum-btns button{font-size:15px;font-weight:700;padding:13px;border-radius:11px;transition:.15s;}
+  .btn-wrong{background:var(--wrong);color:#fff;}
+  .btn-wrong:hover{background:#a53a30;}
+  .btn-wrong:disabled{opacity:.4;cursor:default;}
+  .btn-ghost{background:#fff;border:1px solid var(--line);color:var(--ink);}
+  .btn-ghost:hover{border-color:var(--teal);color:var(--teal);}
+
+  footer{text-align:center;color:var(--muted);font-size:12.5px;margin-top:26px;}
+  @media(max-width:520px){h1{font-size:21px;} .q-text{font-size:16px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">통합사회 · Ⅳ. 문화와 다양성</div>
+    <h1>4-1단원 · 세계의 다양한 문화권</h1>
+    <p class="sub">답을 고르거나 입력하고 <b>채점하기</b>를 누르면 정답·해설·암기 포인트가 나와요. 한 문제씩 풀고 <b>다음 문제 →</b>로 넘어가요.</p>
+  </header>
+
+  <div class="topbar" id="topbar">
+    <span class="pmeta"><b id="pNow">1</b> / <span id="pTotal">0</span></span>
+    <div class="progress"><i id="prog"></i></div>
+    <button class="shuffle" id="btnShuffle">🔀 순서 섞기</button>
+  </div>
+
+  <div id="stage"></div>
+  <footer>정지윤 내신 대비 · 교과서 본문 기반 자동 채점 퀴즈</footer>
+</div>
+
+<script>
+const DATA = [
+  // ===== 객관식 =====
+  {type:'mc', q:"다음 설명에 해당하는 개념은? “문화적 특성이 비교적 넓은 공간에 걸쳐 유사하게 나타나는 범위”",
+   options:["문화권","문화 경관","점이 지대","문화 전파","문화 변동"], answer:0,
+   expl:"비슷한 문화가 넓은 공간에 걸쳐 나타나는 범위가 문화권이에요. 환경이 비슷한 지역에서 유사한 문화적 특성이 나타나는 데서 형성됩니다.",
+   memo:"문화권 = 문화적 특성이 '넓은 공간에 유사하게' 나타나는 범위"},
+
+  {type:'mc', q:"문화권 형성에 영향을 주는 자연환경 가운데, 특히 큰 영향을 주는 두 가지는?",
+   options:["기후와 지형","종교와 언어","산업과 제도","민족과 관습","예술과 정치"], answer:0,
+   expl:"문화권은 기후·지형·식생·토양 같은 자연환경의 영향을 받는데, 그중에서도 기후와 지형의 영향을 가장 크게 받아요. 종교·언어·산업 등은 인문환경 요소입니다.",
+   memo:"자연환경 요소 중 핵심 = 기후 + 지형 / 종교·언어·산업은 '인문환경'"},
+
+  {type:'mc', q:"점이 지대에 대한 설명으로 옳은 것은?",
+   options:[
+     "서로 다른 문화권이 만나 두 지역의 특성이 함께 나타나는 범위로, 튀르키예가 대표적이다.",
+     "인간이 자연에 적응하며 땅 위에 만든 생활 모습을 말한다.",
+     "하나의 곡물만 재배되는 지역을 말한다.",
+     "문화권의 가장 중심이 되는 지역을 가리킨다.",
+     "자연환경의 영향을 전혀 받지 않는 지역이다."], answer:0,
+   expl:"점이 지대는 서로 다른 문화권이 만나는 경계 지역으로, 두 문화의 특성이 함께 나타나요. 아시아와 유럽을 잇는 튀르키예가 대표적입니다(②는 문화 경관 설명).",
+   memo:"점이 지대 = 두 문화권이 만나는 '경계'에서 특성이 섞여 나타나는 곳(예: 튀르키예)"},
+
+  {type:'mc', q:"자연환경과 주거 문화의 연결이 옳지 <u>않은</u> 것은?",
+   options:[
+     "사막의 오아시스 근처 — 흙벽돌집",
+     "히말라야·안데스·알프스 산지 일부 — 돌집",
+     "냉대 기후 삼림이 울창한 곳 — 목재로 지은 집",
+     "덥고 습한 저위도 지역 — 얼음으로 만든 이글루",
+     "주변에서 쉽게 구할 수 있는 재료로 집을 짓는다"], answer:3,
+   expl:"이글루는 한대(북극) 기후 지역에서 얼음을 이용해 짓는 집이에요. 덥고 습한 저위도와는 맞지 않습니다.",
+   memo:"주거 매칭 ▸ 사막=흙벽돌집 / 산지=돌집 / 냉대 삼림=목재집 / 이글루=한대(북극)"},
+
+  {type:'mc', q:"자연환경과 음식 문화의 연결이 옳지 <u>않은</u> 것은?",
+   options:[
+     "덥고 습한 저위도 — 향신료 이용, 기름에 튀긴 음식",
+     "온화한 중위도 — 곡물·과일·채소 등 다양한 재료의 음식",
+     "기온이 낮은 고위도 — 육류·훈제 요리·소시지 등 저장 음식",
+     "저위도 — 음식이 상하는 것을 막기 위한 조리법 발달",
+     "고위도 — 음식이 상하지 않게 향신료를 많이 쓴 음식"], answer:4,
+   expl:"향신료를 많이 쓰는 건 음식이 잘 상하는 ‘저위도(덥고 습한)’ 지역이에요. 고위도는 열량 높은 육류·저장 음식이 발달합니다.",
+   memo:"음식 매칭 ▸ 저위도=향신료·튀김(상함 방지) / 고위도=육류·훈제·소시지(저장)"},
+
+  {type:'mc', q:"이슬람교 문화권에서 볼 수 있는 모습으로 옳지 <u>않은</u> 것은?",
+   options:[
+     "돼지고기와 술을 먹지 않는다.",
+     "할랄 산업이 발달하였다.",
+     "여성들이 히잡·차도르 등을 착용한다.",
+     "예배 사원인 모스크를 볼 수 있다.",
+     "소를 신성하게 여겨 쇠고기를 먹지 않는다."], answer:4,
+   expl:"소를 신성시해 쇠고기를 먹지 않는 것은 힌두교 문화권의 특징이에요. 이슬람교는 돼지고기·술 금기, 할랄, 모스크가 특징입니다.",
+   memo:"이슬람교 ▸ 돼지고기·술 금지 / 할랄 / 히잡·차도르 / 모스크 (쇠고기 금기는 힌두교!)"},
+
+  {type:'mc', q:"힌두교 문화권의 특징으로 옳은 것은?",
+   options:[
+     "갠지스강을 신성시해 강에서 목욕을 하고, 소를 신성시해 쇠고기를 먹지 않는다.",
+     "교회나 성당에 모여 예배를 드린다.",
+     "돼지고기와 술을 금기시하며 할랄 산업이 발달하였다.",
+     "불상과 탑이 있는 사원의 문화 경관을 볼 수 있다.",
+     "메카를 향해 하루 다섯 번씩 기도한다."], answer:0,
+   expl:"힌두교는 갠지스강을 신성시해 목욕(沐浴) 의식을 하고, 소를 신성한 동물로 여겨 쇠고기를 먹지 않아요(②크리스트교, ③⑤이슬람교, ④불교).",
+   memo:"힌두교 ▸ 갠지스강 목욕 + 소 신성시(쇠고기 X)"},
+
+  {type:'mc', q:"세계의 종교 인구를 신자 수가 많은 순서대로 바르게 나열한 것은?",
+   options:[
+     "크리스트교 > 이슬람교 > 힌두교 > 불교",
+     "이슬람교 > 크리스트교 > 불교 > 힌두교",
+     "크리스트교 > 힌두교 > 이슬람교 > 불교",
+     "불교 > 크리스트교 > 이슬람교 > 힌두교",
+     "힌두교 > 이슬람교 > 크리스트교 > 불교"], answer:0,
+   expl:"세계 종교 인구는 크리스트교 → 이슬람교 → 힌두교 → 불교 순으로 많아요.",
+   memo:"종교 인구 순서 = 크리스트교 > 이슬람교 > 힌두교 > 불교"},
+
+  {type:'mc', q:"동양 문화권에 대한 설명으로 옳지 <u>않은</u> 것은?",
+   options:[
+     "동아시아·동남아시아·남부 아시아 일대에 해당한다.",
+     "계절풍의 영향을 받아 벼농사가 발달하였다.",
+     "벼농사 발달로 대가족 제도와 공동체주의가 발달하였다.",
+     "동아시아는 한자와 젓가락을 사용하며 유교·불교문화가 나타난다.",
+     "크리스트교가 생활 전반에 큰 영향을 주었다."], answer:4,
+   expl:"크리스트교가 생활 전반에 큰 영향을 준 것은 유럽 문화권이에요. 동양 문화권의 핵심은 계절풍·벼농사·대가족·공동체주의입니다.",
+   memo:"동양 문화권 ▸ 계절풍 → 벼농사 → 대가족·공동체주의 / 동아시아=한자·젓가락·유교·불교"},
+
+  {type:'mc', q:"동남아시아 지역에 대한 설명으로 옳지 <u>않은</u> 것은?",
+   options:[
+     "세계적인 벼농사 지역이다.",
+     "인도양과 태평양을 연결하는 교통의 요충지이다.",
+     "불교·이슬람교·크리스트교 등 다양한 문화가 나타난다.",
+     "선진국의 자본·기술과 원주민 노동력이 결합한 플랜테이션이 발달하였다.",
+     "주민 대다수가 힌두교를 믿는다."], answer:4,
+   expl:"힌두교를 중심으로 하는 곳은 남부 아시아예요. 동남아시아는 다양한 종교가 섞여 나타나고, 벼농사와 플랜테이션이 발달했습니다.",
+   memo:"동남아시아 ▸ 벼농사 + 플랜테이션 + 교통 요충지 + 다양한 종교 (힌두교 중심은 남부 아시아)"},
+
+  {type:'mc', q:"유럽 문화권의 지역별 특징 연결이 옳지 <u>않은</u> 것은?",
+   options:[
+     "북서 유럽 — 혼합 농업·낙농업 발달, 개신교, 게르만족",
+     "남부 유럽 — 수목 농업 발달, 가톨릭교, 라틴족",
+     "동부 유럽 — 동방 정교, 슬라브족",
+     "북서 유럽 — 산업 혁명의 발상지 영국 포함",
+     "남부 유럽 — 편서풍 영향으로 연중 습윤한 기후"], answer:4,
+   expl:"편서풍 영향으로 연중 습윤한 곳은 북서 유럽이에요. 남부 유럽은 고온 건조한 여름(지중해성 기후)이 특징입니다.",
+   memo:"북서 유럽=습윤·혼합농업/낙농업·개신교·게르만족 / 남부 유럽=건조한 여름·수목 농업·가톨릭교·라틴족 / 동부 유럽=동방 정교·슬라브족"},
+
+  {type:'mc', q:"남부 유럽에서 고온 건조한 여름에 잘 견디는 포도·올리브 등을 재배하는 농업은?",
+   options:["수목 농업","혼합 농업","낙농업","플랜테이션","이동식 화전 농업"], answer:0,
+   expl:"건조한 여름에 강한 포도·올리브 등을 기르는 농업이 수목 농업이에요. 지중해성 기후인 남부 유럽의 특징입니다.",
+   memo:"수목 농업 = 남부 유럽(지중해성) 포도·올리브"},
+
+  {type:'mc', q:"아메리카 문화권에 대한 설명으로 옳지 <u>않은</u> 것은?",
+   options:[
+     "리오그란데강을 기준으로 앵글로아메리카와 라틴 아메리카로 구분된다.",
+     "앵글로아메리카는 주로 영어를 쓰고 개신교 비중이 높다.",
+     "라틴 아메리카는 포르투갈어·에스파냐어를 쓰고 가톨릭교 비중이 높다.",
+     "브라질은 주로 에스파냐어를 사용한다.",
+     "15세기 이후 이주민의 영향으로 인종이 다양하다."], answer:3,
+   expl:"브라질은 과거 포르투갈의 식민 지배를 받아 주로 ‘포르투갈어’를 써요. 라틴 아메리카의 나머지 대부분 국가가 에스파냐어를 사용합니다.",
+   memo:"앵글로아메리카=영어·개신교 / 라틴 아메리카=포르투갈어·에스파냐어·가톨릭교 (브라질=포르투갈어!)"},
+
+  {type:'mc', q:"아메리카 문화권을 앵글로아메리카와 라틴 아메리카로 나누는 자연적 경계는?",
+   options:["리오그란데강","아마존강","미시시피강","파나마 지협","안데스산맥"], answer:0,
+   expl:"문화적 경계인 리오그란데강을 기준으로 앵글로·라틴 아메리카가 나뉘어요. (파나마 지협은 북·남아메리카를 나누는 지리적 경계입니다.)",
+   memo:"문화적 경계=리오그란데강(앵글로/라틴) / 지리적 경계=파나마 지협(북/남)"},
+
+  {type:'mc', q:"건조 문화권에 대한 설명으로 옳지 <u>않은</u> 것은?",
+   options:[
+     "북부 아프리카·서남아시아·중앙아시아 일대의 건조 기후 지역이다.",
+     "주로 아랍어를 쓰고 주민 대다수가 이슬람교를 믿는다.",
+     "전통적으로 유목과 함께 오아시스 농업이 이루어졌다.",
+     "석유 자원 개발로 정착 인구가 늘면서 전통 유목 문화가 쇠퇴하였다.",
+     "토속 신앙을 바탕으로 부족 중심의 생활이 이루어진다."], answer:4,
+   expl:"토속 신앙·부족 중심 생활은 아프리카 문화권의 특징이에요. 건조 문화권은 아랍어·이슬람교·유목·오아시스 농업이 핵심입니다.",
+   memo:"건조 문화권 ▸ 아랍어 + 이슬람교 + 유목·오아시스 농업 (부족 중심은 아프리카!)"},
+
+  {type:'mc', q:"아프리카 문화권에 대한 설명으로 옳은 것은?",
+   options:[
+     "토속 신앙을 바탕으로 부족 중심의 생활이 이루어지는 곳이 많다.",
+     "주민 대다수가 크리스트교를 믿는다.",
+     "계절풍의 영향으로 벼농사가 발달하였다.",
+     "주로 영어를 쓰고 개신교를 믿는다.",
+     "순록 유목이 주로 이루어진다."], answer:0,
+   expl:"사하라 사막 남쪽의 아프리카 문화권은 토속 신앙과 부족 중심 생활, 이동식 화전 농업·플랜테이션이 특징이에요.",
+   memo:"아프리카 문화권 ▸ 토속 신앙 + 부족 중심 + 이동식 화전 농업"},
+
+  {type:'mc', q:"오세아니아 문화권에 대한 설명으로 옳지 <u>않은</u> 것은?",
+   options:[
+     "오스트레일리아·뉴질랜드·남태평양 도서 지역에 해당한다.",
+     "소·양을 사육하는 목축업과 관광업이 발달하였다.",
+     "과거 영국 식민 지배 영향으로 주로 영어를 쓰고 개신교를 믿는다.",
+     "원주민으로 애버리지니·마오리족이 있다.",
+     "계절풍의 영향으로 벼농사가 발달하였다."], answer:4,
+   expl:"계절풍·벼농사는 동양 문화권의 특징이에요. 오세아니아는 청정한 자연환경, 목축업·관광업, 영어·개신교가 핵심입니다.",
+   memo:"오세아니아 ▸ 목축업·관광업 + 영어·개신교 + 원주민(애버리지니·마오리족)"},
+
+  {type:'mc', q:"북극 문화권에 대한 설명으로 옳지 <u>않은</u> 것은?",
+   options:[
+     "유라시아·북아메리카 북부, 그린란드 일대의 북극해 연안 지역이다.",
+     "기온이 낮아 인간이 거주하기 불리하다.",
+     "원주민들은 순록을 유목하거나 바다표범·고래 등을 사냥한다.",
+     "이누이트는 얼음 위에서 바다표범·물개 등을 사냥한다.",
+     "현대 문명이 전파되어도 전통적 생활양식이 그대로 유지되고 있다."], answer:4,
+   expl:"북극 문화권은 현대 문명이 전파되면서 전통적 생활양식이 점차 ‘사라지고’ 있어요.",
+   memo:"북극 문화권 ▸ 순록 유목·사냥(바다표범·고래) / 이누이트 / 현대 문명 전파로 전통 약화"},
+
+  {type:'mc', q:"문화권과 대표 특징의 연결이 옳지 <u>않은</u> 것은?",
+   options:[
+     "동양 문화권 — 벼농사",
+     "유럽 문화권 — 밀 농사",
+     "건조 문화권 — 이슬람교",
+     "오세아니아 문화권 — 목축업",
+     "아메리카 문화권 — 순록 유목"], answer:4,
+   expl:"아메리카 문화권의 대표 특징은 크리스트교예요. 순록 유목은 북극 문화권의 특징입니다.",
+   memo:"대표 매칭 ▸ 동양=벼농사 / 유럽=밀 농사 / 아메리카=크리스트교 / 건조=이슬람교 / 아프리카=플랜테이션 / 오세아니아=목축업 / 북극=순록 유목"},
+
+  // ===== 단답형 (핵심 개념) =====
+  {type:'sa', q:"인간이 환경과 상호 작용하면서 만들어 낸 옷·음식·집·종교·언어 등 사회 전반의 생활양식을 [   ]라고 한다.",
+   answers:["문화"], shown:"문화",
+   expl:"문화는 각 지역의 자연환경과 인문환경을 반영하기 때문에 지역마다 다양하게 나타나요.",
+   memo:"문화 = 사회 전반의 '생활양식' (자연환경+인문환경 반영)"},
+
+  {type:'sa', q:"문화적 특성이 비교적 넓은 공간에 걸쳐 유사하게 나타나는 범위를 [   ]이라고 한다.",
+   answers:["문화권"], shown:"문화권",
+   expl:"문화권은 오랜 기간에 걸쳐 형성되며, 인류의 이동과 문화 전파로 변화하기도 합니다.",
+   memo:"문화권 = 비슷한 문화가 '넓은 공간'에 나타나는 범위"},
+
+  {type:'sa', q:"서로 다른 문화권이 만나 두 지역의 특성이 함께 나타나는 지리적 범위를 [   ]라고 한다.",
+   answers:["점이지대","점이 지대"], shown:"점이 지대",
+   expl:"문화권의 경계 지역에서 나타나며, 아시아와 유럽을 잇는 튀르키예가 대표적이에요.",
+   memo:"점이 지대 = 문화권 경계, 두 특성이 섞임 (예: 튀르키예)"},
+
+  {type:'sa', q:"인간이 자연환경에 적응하는 과정에서 땅 위에 만들어 놓은 생활 모습을 [   ]이라고 한다.",
+   answers:["문화경관","문화 경관"], shown:"문화 경관",
+   expl:"같은 문화권에서는 비슷한 생활양식과 문화 경관을 볼 수 있어요.",
+   memo:"문화 경관 = 인간이 땅 위에 만든 '생활 모습'"},
+
+  {type:'sa', q:"이슬람 율법에 따라 이슬람교도가 먹고 쓸 수 있도록 허용된 제품을 [   ]이라고 한다.",
+   answers:["할랄","halal","할랄(halal)"], shown:"할랄(Halal)",
+   expl:"이슬람교 문화권에서는 할랄 산업이 발달하였습니다.",
+   memo:"할랄 = 이슬람교도에게 '허용된' 제품"},
+
+  {type:'sa', q:"동남아시아에서 선진국의 자본·기술과 원주민의 노동력이 결합하여 기호·원료 작물을 대규모로 재배하는 농업을 [   ]이라고 한다.",
+   answers:["플랜테이션","플렌테이션"], shown:"플랜테이션",
+   expl:"동남아시아와 아프리카 문화권에서 발달한 대규모 상업적 농업이에요.",
+   memo:"플랜테이션 = 선진국 자본·기술 + 원주민 노동력 → 대규모 재배 (동남아시아·아프리카)"},
+
+  {type:'sa', q:"아메리카 문화권을 앵글로아메리카와 라틴 아메리카로 나누는 자연적 경계가 되는 강은 [   ]이다.",
+   answers:["리오그란데강","리오그란데","리오그란데 강"], shown:"리오그란데강",
+   expl:"리오그란데강은 미국과 멕시코 국경의 일부를 지나며, 아메리카 문화권을 나누는 자연적 경계입니다.",
+   memo:"리오그란데강 = 앵글로/라틴 아메리카를 나누는 경계"},
+
+  {type:'sa', q:"북서 유럽에서 작물의 재배와 가축의 사육을 함께 하는 농업을 [   ]이라고 한다.",
+   answers:["혼합농업","혼합 농업"], shown:"혼합 농업",
+   expl:"편서풍 영향으로 연중 습윤한 북서 유럽에서 혼합 농업과 낙농업이 발달했어요.",
+   memo:"혼합 농업 = 작물 재배 + 가축 사육 (북서 유럽)"},
+
+  {type:'sa', q:"남부 유럽에서 고온 건조한 여름에 잘 견디는 포도·올리브 등을 재배하는 농업을 [   ]이라고 한다.",
+   answers:["수목농업","수목 농업"], shown:"수목 농업",
+   expl:"지중해성 기후인 남부 유럽의 대표적인 농업 방식입니다.",
+   memo:"수목 농업 = 남부 유럽, 포도·올리브"},
+
+  {type:'sa', q:"북극 문화권에서 바다에 떠 있는 얼음 위에서 바다표범·물개 등을 사냥하며 사는 원주민은 [   ]이다.",
+   answers:["이누이트","이누이트족"], shown:"이누이트",
+   expl:"이누이트는 동물 가죽으로 만든 두꺼운 옷을 입고 사냥·유목 생활을 해 온 북극 원주민이에요.",
+   memo:"이누이트 = 북극 원주민, 바다표범·물개 사냥"},
+
+  {type:'sa', q:"아프리카에서 나무를 베고 불을 지른 후 그 재를 비료로 하여 카사바·얌 등을 재배하는 전통 농업을 [   ]이라고 한다.",
+   answers:["이동식화전농업","이동식 화전 농업","화전농업","화전 농업"], shown:"이동식 화전 농업",
+   expl:"열대림 분포 지역과 사바나 지역을 중심으로 이루어지는 아프리카의 전통 농업이에요.",
+   memo:"이동식 화전 농업 = 나무 태운 재를 비료로 (아프리카, 카사바·얌)"},
+
+  {type:'sa', q:"같은 조상·언어·종교 등을 가진 지역적 생활 공동체를 [   ]이라고 한다.",
+   answers:["부족"], shown:"부족",
+   expl:"아프리카 문화권은 토속 신앙을 바탕으로 부족 중심의 생활이 이루어지는 곳이 많아요.",
+   memo:"부족 = 같은 조상·언어·종교의 생활 공동체 (아프리카 문화권 키워드)"},
+
+  {type:'sa', q:"이슬람교의 성지로, 신자들이 하루에 다섯 번씩 향해 기도하는 도시는 [   ]이다.",
+   answers:["메카"], shown:"메카",
+   expl:"건조 문화권(이슬람교)의 성지로, 카바 신전이 있는 곳이에요.",
+   memo:"메카 = 이슬람교 성지, 하루 5번 기도"},
+
+  {type:'sa', q:"케냐·탄자니아 등 동아프리카에 거주하며 부족 단위 공동체 문화를 유지하는 부족은 [   ]이다.",
+   answers:["마사이족","마사이"], shown:"마사이족",
+   expl:"붉은 천으로 만든 전통 의복 슈카를 입는 것으로 잘 알려진 동아프리카의 부족이에요.",
+   memo:"마사이족 = 동아프리카(케냐·탄자니아) 부족"},
+
+  // ===== O/X =====
+  {type:'ox', q:"문화권의 경계는 대체로 높은 산맥이나 큰 하천 등 자연환경을 기준으로 나뉜다.", answer:'O',
+   expl:"맞아요. 문화권의 경계는 보통 산맥·하천 같은 자연환경을 기준으로 나뉩니다.",
+   memo:"문화권 경계 = 산맥·하천 등 '자연환경' 기준"},
+
+  {type:'ox', q:"같은 문화권에서는 서로 다른 생활양식과 문화 경관이 나타난다.", answer:'X',
+   expl:"틀려요. 같은 문화권에서는 ‘비슷한’ 생활양식과 문화 경관이 나타납니다.",
+   memo:"같은 문화권 = '비슷한' 생활양식·문화 경관"},
+
+  {type:'ox', q:"문화권은 자연환경 중에서도 특히 기후와 지형의 영향을 많이 받는다.", answer:'O',
+   expl:"맞아요. 옷·음식·집 같은 기본 생활양식이 기후·지형의 영향을 크게 받습니다.",
+   memo:"자연환경 중 핵심 = 기후 + 지형"},
+
+  {type:'ox', q:"이슬람교 문화권에서는 돼지고기와 술을 먹지 않는다.", answer:'O',
+   expl:"맞아요. 이슬람교 문화권에서는 돼지고기와 술을 금기시하고 할랄 산업이 발달했어요.",
+   memo:"이슬람교 = 돼지고기·술 금지 + 할랄"},
+
+  {type:'ox', q:"힌두교 문화권에서는 소를 신성하게 여겨 쇠고기를 먹지 않는다.", answer:'O',
+   expl:"맞아요. 힌두교는 소를 신성한 동물로 여겨 쇠고기를 먹지 않고, 갠지스강에서 목욕 의식을 합니다.",
+   memo:"힌두교 = 소 신성시(쇠고기 X) + 갠지스강 목욕"},
+
+  {type:'ox', q:"세계의 종교 인구는 이슬람교가 가장 많다.", answer:'X',
+   expl:"틀려요. 세계 종교 인구는 크리스트교가 가장 많고, 그다음이 이슬람교입니다.",
+   memo:"종교 인구 1위 = 크리스트교 (이슬람교 아님)"},
+
+  {type:'ox', q:"동양 문화권은 계절풍의 영향을 받아 벼농사가 발달하였다.", answer:'O',
+   expl:"맞아요. 계절풍으로 여름에 기온이 높고 강수량이 풍부해 벼농사가 발달했어요.",
+   memo:"동양 문화권 = 계절풍 → 벼농사"},
+
+  {type:'ox', q:"동아시아 지역은 한자와 젓가락을 사용하며 유교와 불교문화가 나타난다.", answer:'O',
+   expl:"맞아요. 한국·중국·일본 등 동아시아의 공통적인 문화 특징입니다.",
+   memo:"동아시아 = 한자·젓가락 + 유교·불교"},
+
+  {type:'ox', q:"북서 유럽은 종교적으로 가톨릭교 신자가 많고 민족은 라틴족의 비율이 높다.", answer:'X',
+   expl:"틀려요. 북서 유럽은 개신교·게르만족이 많아요. 가톨릭교·라틴족은 남부 유럽의 특징입니다.",
+   memo:"북서 유럽=개신교·게르만족 / 남부 유럽=가톨릭교·라틴족"},
+
+  {type:'ox', q:"앵글로아메리카는 과거 영국의 식민 지배를 받아 주로 영어를 사용한다.", answer:'O',
+   expl:"맞아요. 앵글로아메리카는 영어를 쓰고 개신교 비중이 높습니다.",
+   memo:"앵글로아메리카 = 영국 식민 → 영어·개신교"},
+
+  {type:'ox', q:"라틴 아메리카는 대체로 가톨릭교 신자의 비중이 높다.", answer:'O',
+   expl:"맞아요. 포르투갈·에스파냐의 식민 지배 영향으로 가톨릭교 비중이 높습니다.",
+   memo:"라틴 아메리카 = 가톨릭교 + 포르투갈어·에스파냐어"},
+
+  {type:'ox', q:"건조 문화권의 주민들은 주로 아랍어를 사용하고 대다수가 이슬람교를 믿는다.", answer:'O',
+   expl:"맞아요. 건조 문화권은 아랍어·이슬람교를 바탕으로 유목과 오아시스 농업이 발달했어요.",
+   memo:"건조 문화권 = 아랍어 + 이슬람교 + 유목"},
+
+  {type:'ox', q:"오세아니아 문화권은 과거 영국 식민 지배 영향으로 주로 영어를 사용하고 개신교를 믿는다.", answer:'O',
+   expl:"맞아요. 영어·개신교가 특징이며, 원주민으로 애버리지니·마오리족이 있습니다.",
+   memo:"오세아니아 = 영어·개신교 + 원주민(애버리지니·마오리족)"},
+
+  {type:'ox', q:"북극 문화권에서는 현대 문명이 전파되면서 전통적 생활양식이 점차 사라지고 있다.", answer:'O',
+   expl:"맞아요. 순록 유목·사냥 등 전통적 생활양식이 현대 문명 전파로 약화되고 있어요.",
+   memo:"북극 문화권 = 현대 문명 전파 → 전통 약화"},
+
+  {type:'ox', q:"아프리카 문화권은 토속 신앙을 바탕으로 부족 중심의 생활이 이루어지는 곳이 많다.", answer:'O',
+   expl:"맞아요. 사하라 사막 남쪽의 아프리카 문화권은 토속 신앙·부족 중심 생활이 특징입니다.",
+   memo:"아프리카 문화권 = 토속 신앙 + 부족 중심"}
+];
+
+const MARKS=['①','②','③','④','⑤'];
+let order = DATA.map((_,i)=>i);
+let pos = 0;
+const state = {}; // idx -> {picked, graded, correct}
+
+function norm(s){return (s||'').toString().trim().toLowerCase().replace(/\s+/g,'').replace(/[().,·]/g,'');}
+
+function st(idx){ return state[idx] || (state[idx]={picked:null,graded:false,correct:false}); }
+
+function updateTop(){
+  document.getElementById('pNow').textContent=Math.min(pos+1,order.length);
+  document.getElementById('pTotal').textContent=order.length;
+  document.getElementById('prog').style.width=((pos)/order.length*100)+'%';
+}
+
+function renderQuestion(){
+  updateTop();
+  const idx=order[pos]; const item=DATA[idx]; const s=st(idx);
+  const stage=document.getElementById('stage');
+  const tagMap={mc:['mc','객관식'],sa:['sa','단답형'],ox:['ox','O / X']};
+  const [tagCls,tagTxt]=tagMap[item.type];
+  let qhtml=item.q.replace(/\[\s*\]/g,'<span class="blank">　　</span>');
+
+  let body='';
+  if(item.type==='mc'){
+    body='<div class="opts">'+item.options.map((o,i)=>
+      `<div class="opt" data-i="${i}"><span class="mk">${MARKS[i]}</span><span>${o}</span></div>`).join('')+'</div>';
+  }else if(item.type==='ox'){
+    body='<div class="ox"><button data-v="O">O</button><button data-v="X">X</button></div>';
+  }else{
+    body='<input class="sa-input" type="text" placeholder="정답을 입력하세요" autocomplete="off">';
+  }
+
+  const lastQ=(pos===order.length-1);
+  stage.innerHTML=`
+    <div class="q">
+      <div class="q-head"><span class="num">${pos+1}</span><span class="tag ${tagCls}">${tagTxt}</span></div>
+      <p class="q-text">${qhtml}</p>
+      ${body}
+      <div class="result"></div>
+      <div class="nav">
+        <button class="prev" id="btnPrev" ${pos===0?'disabled':''}>← 이전</button>
+        <button class="primary" id="btnPrimary">채점하기</button>
+      </div>
+    </div>`;
+
+  const card=stage.querySelector('.q');
+
+  // restore selection / interactions
+  if(item.type==='mc'){
+    card.querySelectorAll('.opt').forEach(el=>{
+      const i=+el.dataset.i;
+      if(s.picked===i) el.classList.add('sel');
+      el.addEventListener('click',()=>{
+        if(s.graded) return;
+        card.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+        el.classList.add('sel'); s.picked=i;
+      });
+    });
+  }else if(item.type==='ox'){
+    card.querySelectorAll('.ox button').forEach(el=>{
+      if(s.picked===el.dataset.v) el.classList.add('sel');
+      el.addEventListener('click',()=>{
+        if(s.graded) return;
+        card.querySelectorAll('.ox button').forEach(b=>b.classList.remove('sel'));
+        el.classList.add('sel'); s.picked=el.dataset.v;
+      });
+    });
+  }else{
+    const inp=card.querySelector('.sa-input');
+    if(s.picked!=null) inp.value=s.picked;
+    inp.addEventListener('input',()=>{ s.picked=inp.value; });
+    inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault(); document.getElementById('btnPrimary').click();}});
+    if(!s.graded) setTimeout(()=>inp.focus(),50);
+  }
+
+  document.getElementById('btnPrev').addEventListener('click',()=>{ if(pos>0){pos--; renderQuestion();} });
+
+  const primary=document.getElementById('btnPrimary');
+  if(s.graded){
+    showGraded(card,idx);
+    primary.textContent=lastQ?'결과 보기 →':'다음 문제 →';
+    primary.onclick=()=>goNext(lastQ);
+  }else{
+    primary.textContent='채점하기';
+    primary.onclick=()=>{
+      const ok=gradeCurrent(card,idx);
+      if(ok){
+        primary.textContent=lastQ?'결과 보기 →':'다음 문제 →';
+        primary.onclick=()=>goNext(lastQ);
+      }
+    };
+  }
+}
+
+function gradeCurrent(card,idx){
+  const item=DATA[idx]; const s=st(idx);
+  if(s.picked==null || (item.type==='sa' && !norm(s.picked))){
+    const inp=card.querySelector('.sa-input');
+    if(inp) inp.focus();
+    card.querySelector('#btnPrimary').animate(
+      [{transform:'translateX(0)'},{transform:'translateX(-4px)'},{transform:'translateX(4px)'},{transform:'translateX(0)'}],{duration:220});
+    return false;
+  }
+  if(item.type==='mc') s.correct=(+s.picked===item.answer);
+  else if(item.type==='ox') s.correct=(s.picked===item.answer);
+  else s.correct=item.answers.some(a=>norm(a)===norm(s.picked));
+  s.graded=true;
+  showGraded(card,idx);
+  return true;
+}
+
+function showGraded(card,idx){
+  const item=DATA[idx]; const s=st(idx);
+  if(item.type==='mc'){
+    card.querySelectorAll('.opt').forEach(el=>{
+      el.style.cursor='default'; const i=+el.dataset.i;
+      if(i===item.answer) el.classList.add('correct');
+      if(i===+s.picked && !s.correct) el.classList.add('incorrect');
+    });
+  }else if(item.type==='ox'){
+    card.querySelectorAll('.ox button').forEach(el=>{
+      el.style.cursor='default';
+      if(el.dataset.v===item.answer) el.classList.add('correct');
+      if(el.dataset.v===s.picked && !s.correct) el.classList.add('incorrect');
+    });
+  }else{
+    const inp=card.querySelector('.sa-input');
+    inp.readOnly=true; inp.classList.add(s.correct?'correct':'incorrect');
+  }
+  const ansShown = item.type==='mc'?MARKS[item.answer]+' '+item.options[item.answer]
+                 : item.type==='ox'?item.answer : item.shown;
+  const res=card.querySelector('.result');
+  res.innerHTML=`
+    <div class="verdict ${s.correct?'ok':'no'}"><span class="ic">${s.correct?'⭕':'❌'}</span>${s.correct?'정답이에요!':'오답이에요'}</div>
+    <p class="ans-line"><span class="lab">정답</span> · ${ansShown}</p>
+    <div class="expl"><span class="lab">해설</span>${item.expl}</div>
+    <div class="memo"><span class="lab">📌 암기 포인트</span>${item.memo}</div>`;
+  res.classList.add('show');
+}
+
+function goNext(lastQ){
+  if(lastQ){ showSummary(); }
+  else { pos++; renderQuestion(); window.scrollTo({top:0,behavior:'smooth'}); }
+}
+
+function showSummary(){
+  document.getElementById('prog').style.width='100%';
+  document.getElementById('pNow').textContent=order.length;
+  const graded=order.filter(i=>state[i]&&state[i].graded);
+  const correct=graded.filter(i=>state[i].correct).length;
+  const total=order.length;
+  const pct=Math.round(correct/total*100);
+  const wrong=order.filter(i=>state[i]&&state[i].graded&&!state[i].correct);
+
+  // by type
+  const types={mc:'객관식',sa:'단답형',ox:'O / X'};
+  const bd=Object.keys(types).map(t=>{
+    const tot=order.filter(i=>DATA[i].type===t).length;
+    if(tot===0) return '';
+    const cor=order.filter(i=>DATA[i].type===t && state[i]&&state[i].correct).length;
+    return `<div class="bd"><div class="t">${types[t]}</div><div class="v">${cor} / ${tot}</div></div>`;
+  }).join('');
+
+  let msg;
+  if(pct===100) msg='완벽해요! 다 맞혔어요 🎉';
+  else if(pct>=80) msg='잘했어요! 거의 다 외웠네요 👍';
+  else if(pct>=60) msg='절반 넘게 맞혔어요. 틀린 것만 다시 보면 돼요.';
+  else msg='틀린 문제 위주로 한 번 더 풀어 봐요. 금방 늘어요!';
+
+  const C=2*Math.PI*52;
+  const stage=document.getElementById('stage');
+  stage.innerHTML=`
+    <div class="summary">
+      <div class="ring">
+        <svg width="120" height="120">
+          <circle cx="60" cy="60" r="52" fill="none" stroke="#e1e8e9" stroke-width="12"/>
+          <circle cx="60" cy="60" r="52" fill="none" stroke="#1f7a78" stroke-width="12" stroke-linecap="round"
+            stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct/100)}"/>
+        </svg>
+        <div class="pct"><b>${pct}%</b><span>정답률</span></div>
+      </div>
+      <div class="score-label">맞힌 문제</div>
+      <div class="score-big">${correct} <span style="font-size:24px;color:var(--muted);font-weight:700;">/ ${total}</span></div>
+      <div class="breakdown">${bd}</div>
+      <div class="summary-msg">${msg}</div>
+      <div class="sum-btns">
+        <button class="btn-wrong" id="sWrong" ${wrong.length===0?'disabled':''}>✏️ 오답만 다시 풀기 (${wrong.length}문제)</button>
+        <button class="btn-ghost" id="sRetry">↺ 전체 다시 풀기</button>
+        <button class="btn-ghost" id="sShuffle">🔀 순서 섞어서 다시</button>
+      </div>
+    </div>`;
+
+  document.getElementById('sWrong').addEventListener('click',()=>{
+    if(wrong.length===0) return;
+    wrong.forEach(i=>state[i]={picked:null,graded:false,correct:false});
+    order=wrong.slice(); pos=0; renderQuestion(); window.scrollTo({top:0,behavior:'smooth'});
+  });
+  document.getElementById('sRetry').addEventListener('click',()=>resetAll(false));
+  document.getElementById('sShuffle').addEventListener('click',()=>resetAll(true));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function resetAll(shuffle){
+  for(const k in state) delete state[k];
+  order=DATA.map((_,i)=>i);
+  if(shuffle) for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
+  pos=0; renderQuestion(); window.scrollTo({top:0,behavior:'smooth'});
+}
+
+document.getElementById('btnShuffle').addEventListener('click',function(){
+  if(!confirm('순서를 섞고 처음부터 다시 풀까요? (현재 진행 기록은 지워져요)')) return;
+  resetAll(true);
+});
+
+renderQuestion();
+</script>
+</body>
+</html>
