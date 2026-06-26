@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>통합사회 4-4단원 · 다문화 사회와 문화적 다양성 존중 퀴즈</title>
+<style>
+  :root{
+    --bg:#f4f6f7; --card:#ffffff; --ink:#1d2b2e; --muted:#65787c; --line:#e1e8e9;
+    --teal:#1f7a78; --teal-dark:#155c5a; --teal-soft:#e4f1f0;
+    --right:#1f7a78; --right-soft:#e4f1f0; --wrong:#c0473b; --wrong-soft:#fbeceb;
+    --amber:#9a6b15; --amber-soft:#fbf3e2;
+    --tag-mc:#3a6ea5; --tag-sa:#7a5aa6; --tag-ox:#b07a2a;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:680px;margin:0 auto;padding:0 18px 60px;}
+  header{padding:30px 0 16px;}
+  .eyebrow{font-size:13px;letter-spacing:.04em;color:var(--teal);font-weight:700;margin-bottom:6px;}
+  h1{font-size:24px;line-height:1.3;margin:0 0 6px;font-weight:800;letter-spacing:-.01em;}
+  .sub{color:var(--muted);font-size:14px;margin:0;}
+  .topbar{display:flex;align-items:center;gap:12px;margin:6px 0 18px;}
+  .pmeta{font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap;}
+  .pmeta b{color:var(--teal);}
+  .progress{flex:1;height:8px;background:var(--line);border-radius:99px;overflow:hidden;}
+  .progress > i{display:block;height:100%;width:0;background:var(--teal);transition:width .3s ease;border-radius:99px;}
+  .shuffle{font-size:12.5px;font-weight:600;padding:7px 12px;border-radius:8px;cursor:pointer;background:#fff;border:1px solid var(--line);color:var(--ink);transition:.15s;white-space:nowrap;}
+  .shuffle:hover{border-color:var(--teal);color:var(--teal);}
+  button{font-family:inherit;cursor:pointer;border:none;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 22px 20px;}
+  .q-head{display:flex;align-items:center;gap:9px;margin-bottom:14px;flex-wrap:wrap;}
+  .num{font-size:13px;font-weight:800;color:#fff;background:var(--teal-dark);min-width:30px;height:26px;padding:0 8px;border-radius:7px;display:flex;align-items:center;justify-content:center;}
+  .tag{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:99px;}
+  .tag.mc{color:var(--tag-mc);background:#eaf1f8;} .tag.sa{color:var(--tag-sa);background:#f2ecf8;} .tag.ox{color:var(--tag-ox);background:#f8f0e2;}
+  .q-text{font-size:17px;font-weight:600;margin:0 0 16px;letter-spacing:-.01em;line-height:1.55;}
+  .q-text .blank{color:var(--teal);font-weight:800;border-bottom:2px solid var(--teal);padding:0 16px;}
+  .opts{display:flex;flex-direction:column;gap:9px;}
+  .opt{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border:1px solid var(--line);border-radius:11px;background:#fff;cursor:pointer;transition:.13s;font-size:15px;}
+  .opt:hover{border-color:var(--teal);background:var(--teal-soft);}
+  .opt.sel{border-color:var(--teal);background:var(--teal-soft);}
+  .opt .mk{font-weight:800;color:var(--muted);flex-shrink:0;}
+  .opt.sel .mk{color:var(--teal);}
+  .opt.correct{border-color:var(--right);background:var(--right-soft);} .opt.correct .mk{color:var(--right);}
+  .opt.incorrect{border-color:var(--wrong);background:var(--wrong-soft);} .opt.incorrect .mk{color:var(--wrong);}
+  .ox{display:flex;gap:10px;}
+  .ox button{flex:1;padding:16px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:19px;font-weight:800;color:var(--ink);transition:.13s;}
+  .ox button:hover{border-color:var(--teal);background:var(--teal-soft);}
+  .ox button.sel{border-color:var(--teal);background:var(--teal-soft);color:var(--teal-dark);}
+  .ox button.correct{border-color:var(--right);background:var(--right-soft);color:var(--right);}
+  .ox button.incorrect{border-color:var(--wrong);background:var(--wrong-soft);color:var(--wrong);}
+  .sa-input{width:100%;padding:13px 15px;border:1px solid var(--line);border-radius:11px;font-size:16px;font-family:inherit;color:var(--ink);background:#fff;}
+  .sa-input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-soft);}
+  .sa-input.correct{border-color:var(--right);background:var(--right-soft);} .sa-input.incorrect{border-color:var(--wrong);background:var(--wrong-soft);}
+  .result{margin-top:16px;display:none;}
+  .result.show{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(-3px);}to{opacity:1;transform:none;}}
+  .verdict{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;margin-bottom:10px;}
+  .verdict.ok{color:var(--right);} .verdict.no{color:var(--wrong);} .verdict .ic{font-size:19px;}
+  .ans-line{font-size:14.5px;margin:0 0 10px;} .ans-line .lab{font-weight:800;color:var(--teal-dark);}
+  .expl{background:#fafbfb;border:1px solid var(--line);border-left:3px solid var(--teal);border-radius:8px;padding:12px 14px;font-size:14.5px;color:#33403f;margin-bottom:10px;}
+  .expl .lab{font-weight:800;display:block;margin-bottom:3px;color:var(--teal-dark);}
+  .memo{background:var(--amber-soft);border:1px solid #efe1c2;border-left:3px solid var(--amber);border-radius:8px;padding:12px 14px;font-size:14.5px;color:#6e500f;}
+  .memo .lab{font-weight:800;display:block;margin-bottom:3px;color:var(--amber);}
+  .nav{display:flex;gap:10px;margin-top:18px;align-items:center;}
+  .prev{font-size:14px;font-weight:600;padding:11px 16px;border-radius:10px;background:#fff;border:1px solid var(--line);color:var(--muted);transition:.15s;}
+  .prev:hover:not(:disabled){border-color:var(--teal);color:var(--teal);}
+  .prev:disabled{opacity:.4;cursor:default;}
+  .primary{flex:1;font-size:15px;font-weight:700;padding:13px;border-radius:11px;background:var(--teal);color:#fff;transition:.15s;}
+  .primary:hover{background:var(--teal-dark);}
+  .summary{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:30px 24px;text-align:center;}
+  .score-big{font-size:46px;font-weight:800;color:var(--teal);line-height:1;margin:6px 0;}
+  .score-label{font-size:15px;color:var(--muted);font-weight:600;}
+  .ring{width:120px;height:120px;margin:8px auto 14px;position:relative;}
+  .ring svg{transform:rotate(-90deg);}
+  .ring .pct{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .ring .pct b{font-size:30px;font-weight:800;color:var(--teal);line-height:1;}
+  .ring .pct span{font-size:12px;color:var(--muted);}
+  .breakdown{display:flex;gap:10px;justify-content:center;margin:18px 0 6px;flex-wrap:wrap;}
+  .bd{background:#fafbfb;border:1px solid var(--line);border-radius:10px;padding:10px 16px;min-width:90px;}
+  .bd .t{font-size:12px;color:var(--muted);font-weight:600;} .bd .v{font-size:17px;font-weight:800;color:var(--ink);margin-top:2px;}
+  .summary-msg{font-size:15px;color:var(--ink);margin:16px 0 6px;font-weight:600;}
+  .sum-btns{display:flex;flex-direction:column;gap:9px;margin-top:20px;}
+  .sum-btns button{font-size:15px;font-weight:700;padding:13px;border-radius:11px;transition:.15s;}
+  .btn-wrong{background:var(--wrong);color:#fff;} .btn-wrong:hover{background:#a53a30;} .btn-wrong:disabled{opacity:.4;cursor:default;}
+  .btn-ghost{background:#fff;border:1px solid var(--line);color:var(--ink);} .btn-ghost:hover{border-color:var(--teal);color:var(--teal);}
+  footer{text-align:center;color:var(--muted);font-size:12.5px;margin-top:26px;}
+  @media(max-width:520px){h1{font-size:21px;} .q-text{font-size:16px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">통합사회 · Ⅳ. 문화와 다양성</div>
+    <h1>4-4단원 · 다문화 사회와 문화적 다양성 존중</h1>
+    <p class="sub">답을 고르거나 입력하고 <b>채점하기</b>를 누르면 정답·해설·암기 포인트가 나와요. 한 문제씩 풀고 <b>다음 문제 →</b>로 넘어가요.</p>
+  </header>
+  <div class="topbar" id="topbar">
+    <span class="pmeta"><b id="pNow">1</b> / <span id="pTotal">0</span></span>
+    <div class="progress"><i id="prog"></i></div>
+    <button class="shuffle" id="btnShuffle">🔀 순서 섞기</button>
+  </div>
+  <div id="stage"></div>
+  <footer>정지윤 내신 대비 · 교과서 본문 기반 자동 채점 퀴즈</footer>
+</div>
+
+<script>
+const DATA = [
+  // ===== 객관식 =====
+  {type:'mc', q:"다음 설명에 해당하는 개념은? “서로 다른 인종·민족·종교·언어 등 다양한 문화적 배경을 지닌 사람들이 함께 어우러져 살아가는 사회”",
+   options:["다문화 사회","다문화주의","문화 융합","제노포비아","동화주의"], answer:0,
+   expl:"다양한 문화적 배경을 지닌 사람들이 함께 살아가는 사회가 다문화 사회예요. 교통·통신 발달로 인구이동과 문화 교류가 늘면서 진입하게 되었습니다.",
+   memo:"다문화 사회 = 다양한 문화 배경의 사람들이 '함께 어우러져' 사는 사회"},
+
+  {type:'mc', q:"우리나라가 다문화 사회로 변화하게 된 배경으로 옳지 <u>않은</u> 것은?",
+   options:[
+     "1990년대부터 취업·결혼·학업 등을 목적으로 한 이주민이 증가하였다.",
+     "외국인 근로자·국제결혼 이민자·외국인 유학생 등이 늘어났다.",
+     "교통·통신 기술 발달로 국가 간 인구이동이 활발해졌다.",
+     "국가 간 문화 교류가 확대되었다.",
+     "저출생·고령화로 생산 연령 인구가 빠르게 증가하였다."], answer:4,
+   expl:"저출생·고령화로 생산 연령 인구는 빠르게 ‘감소’하고 있어요. 이 때문에 노동력 부족 문제가 생기고 이주민 유입이 도움이 됩니다.",
+   memo:"다문화 사회 배경 = 1990년대부터 이주민 증가 / 생산 연령 인구는 '감소'(증가 아님)"},
+
+  {type:'mc', q:"우리나라에 거주하는 외국인을 체류 유형별로 볼 때 가장 높은 비율을 차지하는 것은?",
+   options:["외국인 근로자","국제결혼 이민자","외국인 유학생","한국 국적 취득자","외국인 주민 자녀"], answer:0,
+   expl:"유형별로는 외국인 근로자가 가장 높고, 그다음 외국 국적 동포, 외국인 주민 자녀, 한국 국적 취득자 순이에요.",
+   memo:"유형별 1위 = 외국인 근로자 (외국인 근로자는 수도권, 국제결혼 이민자는 농어촌에도 많이 거주)"},
+
+  {type:'mc', q:"우리나라에 거주하는 외국인의 국적 중 가장 많은 비율을 차지하는 것은? (한국계 중국인 포함)",
+   options:["중국","베트남","타이","미국","우즈베키스탄"], answer:0,
+   expl:"한국계 중국인을 포함한 중국이 약 41.8%로 가장 많고, 그다음 베트남·타이·우즈베키스탄·미국·캄보디아 순입니다.",
+   memo:"국적별 1위 = 중국(한국계 포함) → 베트남 → 타이 …"},
+
+  {type:'mc', q:"국내 거주 외국인 주민의 지역별 분포에 대한 설명으로 옳은 것은?",
+   options:[
+     "전체 외국인 주민의 절반 이상이 서울·경기·인천 등 수도권에 거주한다.",
+     "외국인 주민 대부분이 제주에 거주한다.",
+     "비수도권에는 외국인 주민이 거의 거주하지 않는다.",
+     "외국인 근로자는 농어촌 지역에만 거주한다.",
+     "국제결혼 이민자는 수도권에만 거주한다."], answer:0,
+   expl:"전체 외국인 주민의 절반 이상이 수도권(서울·경기·인천)에 거주하고, 비수도권에서는 충남·경남·경북 순으로 많아요.",
+   memo:"지역별 = 절반 이상 '수도권'(서울·경기·인천), 비수도권은 충남·경남·경북 순"},
+
+  {type:'mc', q:"다문화 사회로의 변화가 가져온 긍정적인 모습으로 옳지 <u>않은</u> 것은?",
+   options:[
+     "구성원이 선택할 수 있는 문화의 폭이 넓어져 일상생활이 풍요로워졌다.",
+     "다른 문화를 경험하며 편견이나 고정 관념을 극복할 수 있다.",
+     "유입 인구가 노동력 부족 문제 해결에 도움을 준다.",
+     "문화 간 상호 작용으로 새로운 문화가 창조되기도 한다.",
+     "모든 구성원이 하나의 문화만 따르게 되어 갈등이 완전히 사라진다."], answer:4,
+   expl:"다문화 사회는 다양한 문화가 공존하는 사회예요. 하나의 문화만 따르게 되는 것이 아니며, 오히려 다양성을 존중하는 태도가 중요합니다.",
+   memo:"다문화 긍정 효과 = 문화 폭↑·편견 극복·노동력 보완·새 문화 창조"},
+
+  {type:'mc', q:"다음 ( )에 들어갈 말로 옳은 것은? “저출생·고령화로 ( )가 빠르게 감소하여 노동력 부족 문제를 겪는 상황에서, 유입 인구가 노동력을 제공한다.” (생산 활동이 가능한 15~64세 인구)",
+   options:["생산 연령 인구","국제결혼 이민자","외국 국적 동포","다문화 가정","문화적 소수자"], answer:0,
+   expl:"15~64세의 생산 활동이 가능한 인구를 생산 연령 인구라고 해요. 저출생·고령화로 이 인구가 줄면서 노동력 부족이 나타납니다.",
+   memo:"생산 연령 인구 = 15~64세 (저출생·고령화로 감소 → 노동력 부족 → 이주민이 보완)"},
+
+  {type:'mc', q:"다음 설명에 해당하는 개념은? “어떤 집단의 사람들에 대한 단순하고 지나치게 일반화된 생각”",
+   options:["고정 관념","편견","제노포비아","문화 상대주의","보편 윤리"], answer:0,
+   expl:"고정 관념은 집단에 대한 단순·일반화된 생각이에요. 한쪽으로 치우친 생각인 ‘편견’과 구분해 두면 좋아요.",
+   memo:"고정 관념 = 집단에 대한 '단순·일반화된' 생각 / 편견 = '한쪽으로 치우친' 생각"},
+
+  {type:'mc', q:"다문화 사회에서 갈등이 발생하는 원인으로 옳지 <u>않은</u> 것은?",
+   options:[
+     "서로의 문화에 대한 이해가 부족하거나 무지하기 때문이다.",
+     "자신의 문화를 절대시하여 상대 문화를 부정적으로 평가하기 때문이다.",
+     "문화적 소수자에 대한 편견과 사회적 차별이 나타나기 때문이다.",
+     "여러 인종·민족·종교·언어가 공존하기 때문이다.",
+     "서로 다른 문화를 존중하고 깊이 이해하려고 노력하기 때문이다."], answer:4,
+   expl:"문화를 존중하고 이해하려는 노력은 갈등을 ‘해결’하는 방법이에요. 갈등은 이해 부족·문화 절대시·편견·차별에서 비롯됩니다.",
+   memo:"갈등 원인 = 이해 부족·무지 / 자기 문화 절대시 / 편견·차별 (존중·이해는 해결책)"},
+
+  {type:'mc', q:"다음 설명에 해당하는 용어는? “다른 문화권에서 온 사람을 혐오하거나 기피하는 현상으로, 그리스어 ‘낯선 사람’과 ‘공포’를 합친 말”",
+   options:["제노포비아","다문화주의","고정 관념","문화 사대주의","동화주의"], answer:0,
+   expl:"제노포비아(Xenophobia)는 ‘제노스(낯선 사람)+포보스(공포)’로, 다른 문화권 사람을 혐오·기피하는 현상이에요.",
+   memo:"제노포비아 = 낯선 사람(제노스)+공포(포보스) → 외국인 혐오·기피"},
+
+  {type:'mc', q:"다문화 사회의 갈등 해결을 위한 ‘개인적 차원’의 노력으로 옳지 <u>않은</u> 것은?",
+   options:[
+     "다른 문화를 깊이 있게 이해하려는 자세를 갖는다.",
+     "문화 간 차이를 자연스러운 것으로 인정한다.",
+     "이주민을 우리 사회의 구성원으로 인정한다.",
+     "편견과 고정 관념을 버리고 다른 문화를 존중한다.",
+     "외국인 근로자의 고용 등에 관한 법률을 제정한다."], answer:4,
+   expl:"법률 제정은 ‘사회적 차원’의 노력이에요. 개인적 차원은 이해·인정·존중·소통의 자세를 말합니다.",
+   memo:"개인적 차원 = 이해·인정·존중·소통 / 법·제도 마련은 '사회적 차원'"},
+
+  {type:'mc', q:"다문화 사회의 갈등 해결을 위한 ‘사회적 차원’의 노력으로 옳은 것은?",
+   options:[
+     "「외국인 근로자의 고용 등에 관한 법률」·「다문화 가족 지원법」 등 법과 제도를 마련한다.",
+     "개인이 다른 문화를 스스로 이해하려고 노력한다.",
+     "이주민과 개인적으로 소통하여 편견을 버린다.",
+     "나와 다른 문화적 배경을 가진 사람을 개인적으로 존중한다.",
+     "문화 간 차이를 개인이 자연스럽게 받아들인다."], answer:0,
+   expl:"법·제도 마련, 다문화 가족 지원 센터 운영 등이 사회적 차원의 노력이에요. 나머지는 모두 개인적 차원입니다.",
+   memo:"사회적 차원 = 법·제도(외국인 근로자 고용법·다문화 가족 지원법)·지원 센터·다문화 교육"},
+
+  {type:'mc', q:"다문화 가족 지원 센터의 활동으로 옳지 <u>않은</u> 것은?",
+   options:[
+     "국제결혼 이민자에게 한국어 교육을 제공한다.",
+     "다문화 지역 축제를 개최한다.",
+     "외국인과 한국인이 다양한 문화를 함께 체험할 기회를 마련한다.",
+     "취업 연계·교육 지원, 가족 상담 등의 서비스를 제공한다.",
+     "이주민에게 자국 문화를 버리고 한국 문화만 따르도록 강제한다."], answer:4,
+   expl:"다문화 가족 지원 센터는 이주민의 안정적 정착을 ‘지원’하는 곳이에요. 자국 문화를 버리도록 강제하는 것은 문화적 다양성 존중에 어긋납니다.",
+   memo:"다문화 가족 지원 센터 = 한국어 교육·축제·문화 체험·상담 (강제 동화 X)"},
+
+  {type:'mc', q:"다음 설명에 해당하는, 다문화 사회를 바라보는 관점은? “용광로 속에 여러 재료를 넣으면 녹아 하나가 되듯, 주류 문화에 다양한 문화를 동화시켜 사회를 통합하려는 관점”",
+   options:["동화주의","다문화주의","문화 상대주의","제노포비아","보편 윤리"], answer:0,
+   expl:"용광로(Melting Pot) 이론으로 대표되는 동화주의예요. 단, 소수 문화의 문화적 정체성을 잃을 수 있다는 한계가 있습니다.",
+   memo:"동화주의 = 용광로(Melting Pot), 주류 문화에 '동화' / 한계: 소수 문화 정체성 상실"},
+
+  {type:'mc', q:"다음 설명에 해당하는 관점은? “샐러드의 다양한 재료가 고유의 맛과 색을 유지하며 한 그릇에 담기듯, 다양한 문화가 동등한 위치에서 어우러져 조화를 이루도록 사회를 통합하려는 관점”",
+   options:["다문화주의","동화주의","문화 사대주의","자문화 중심주의","제노포비아"], answer:0,
+   expl:"샐러드 볼(Salad Bowl) 이론으로 대표되는 다문화주의예요. 단, 사회적 연대감·결속력이 약화될 수 있다는 한계가 있습니다.",
+   memo:"다문화주의 = 샐러드 볼(Salad Bowl), 고유성 유지하며 '조화' / 한계: 연대감·결속력 약화"},
+
+  {type:'mc', q:"다문화 사회를 바라보는 관점에 대한 설명으로 옳지 <u>않은</u> 것은?",
+   options:[
+     "동화주의(용광로)는 주류 문화에 다른 문화를 동화시키려 한다.",
+     "다문화주의(샐러드 볼)는 다양한 문화가 동등하게 조화를 이루도록 한다.",
+     "동화주의는 소수 문화의 문화적 정체성을 상실시킬 수 있다는 한계가 있다.",
+     "다문화주의는 사회적 연대감·결속력이 약화될 수 있다는 한계가 있다.",
+     "다문화주의는 주류 문화를 중심으로 소수 문화를 흡수하려는 관점이다."], answer:4,
+   expl:"주류 문화를 중심으로 소수 문화를 흡수하려는 것은 ‘동화주의’예요. 다문화주의는 다양한 문화의 동등한 조화를 강조합니다.",
+   memo:"동화주의=주류 중심 흡수(용광로) / 다문화주의=동등한 조화(샐러드 볼)"},
+
+  // ===== 단답형 (핵심 개념) =====
+  {type:'sa', q:"서로 다른 인종·민족·종교·언어 등 다양한 문화적 배경을 지닌 사람들이 함께 어우러져 살아가는 사회를 [   ]라고 한다.",
+   answers:["다문화사회","다문화 사회"], shown:"다문화 사회",
+   expl:"우리나라는 1990년대부터 이주민이 늘면서 다문화 사회로 변화했어요.",
+   memo:"다문화 사회 = 다양한 문화 배경의 사람들이 함께 사는 사회"},
+
+  {type:'sa', q:"어떤 집단의 사람들에 대한 단순하고 지나치게 일반화된 생각을 [   ]이라고 한다.",
+   answers:["고정관념","고정 관념"], shown:"고정 관념",
+   expl:"고정 관념은 집단에 대한 단순·일반화된 생각으로, 다문화 사회의 갈등 원인이 될 수 있어요.",
+   memo:"고정 관념 = 집단에 대한 '단순·일반화'된 생각"},
+
+  {type:'sa', q:"공정하지 못하고 한쪽으로 치우친 생각을 [   ]이라고 한다.",
+   answers:["편견"], shown:"편견",
+   expl:"편견은 한쪽으로 치우친 생각으로, 문화적 소수자에 대한 차별로 이어질 수 있습니다.",
+   memo:"편견 = '한쪽으로 치우친' 생각 (고정 관념과 구분!)"},
+
+  {type:'sa', q:"다른 문화권에서 온 사람을 혐오하거나 기피하는 현상을 [   ]라고 한다.",
+   answers:["제노포비아","xenophobia"], shown:"제노포비아",
+   expl:"그리스어 ‘낯선 사람(제노스)’과 ‘공포(포보스)’를 합친 말이에요.",
+   memo:"제노포비아 = 외국인 혐오·기피 (제노스+포보스)"},
+
+  {type:'sa', q:"생산 활동이 가능한 15~64세의 인구를 [   ]라고 한다.",
+   answers:["생산연령인구","생산 연령 인구","생산가능인구","생산 가능 인구"], shown:"생산 연령 인구",
+   expl:"저출생·고령화로 이 인구가 감소하면서 노동력 부족 문제가 나타나요.",
+   memo:"생산 연령 인구 = 15~64세 (감소 → 노동력 부족)"},
+
+  {type:'sa', q:"용광로 이론으로 대표되며, 주류 문화에 다양한 문화를 동화시켜 사회를 통합하려는 관점을 [   ]라고 한다.",
+   answers:["동화주의"], shown:"동화주의",
+   expl:"용광로(Melting Pot) 이론으로 대표되며, 소수 문화의 정체성 상실이라는 한계가 있어요.",
+   memo:"동화주의 = 용광로, 주류에 동화 / 한계: 소수 문화 정체성 상실"},
+
+  {type:'sa', q:"샐러드 볼 이론으로 대표되며, 다양한 문화가 동등한 위치에서 조화를 이루도록 하는 관점을 [   ]라고 한다.",
+   answers:["다문화주의"], shown:"다문화주의",
+   expl:"샐러드 볼(Salad Bowl) 이론으로 대표되며, 사회적 연대감·결속력 약화라는 한계가 있어요.",
+   memo:"다문화주의 = 샐러드 볼, 동등한 조화 / 한계: 연대감·결속력 약화"},
+
+  {type:'sa', q:"국적이 다른 배우자와 결혼하여 다른 나라로 주거지를 옮긴 사람을 [   ] 이민자라고 한다.",
+   answers:["국제결혼","국제 결혼"], shown:"국제결혼 (이민자)",
+   expl:"외국인 근로자, 외국인 유학생 등과 함께 우리나라 이주민의 한 유형이에요.",
+   memo:"국제결혼 이민자 = 국적 다른 배우자와 결혼해 이주한 사람"},
+
+  // ===== O/X =====
+  {type:'ox', q:"다문화 사회는 다양한 문화적 배경을 지닌 사람들이 함께 어우러져 살아가는 사회이다.", answer:'O',
+   expl:"맞아요. 서로 다른 인종·민족·종교·언어를 가진 사람들이 함께 사는 사회입니다.",
+   memo:"다문화 사회 = 다양한 배경의 사람들이 함께 삶"},
+
+  {type:'ox', q:"우리나라는 1990년대부터 이주민이 증가하며 다문화 사회로 변화하였다.", answer:'O',
+   expl:"맞아요. 취업·결혼·학업 등을 목적으로 한 이주민이 꾸준히 늘었어요.",
+   memo:"우리나라 다문화 사회 진입 = 1990년대부터"},
+
+  {type:'ox', q:"우리나라에 거주하는 외국인을 유형별로 보면 외국인 근로자가 가장 높은 비율을 차지한다.", answer:'O',
+   expl:"맞아요. 외국인 근로자가 가장 높고, 그다음 외국 국적 동포 순입니다.",
+   memo:"유형별 1위 = 외국인 근로자"},
+
+  {type:'ox', q:"국내 거주 외국인의 국적은 미국이 가장 많은 비율을 차지한다.", answer:'X',
+   expl:"틀려요. 한국계 중국인을 포함한 중국이 가장 많은 비율을 차지합니다.",
+   memo:"국적별 1위 = 중국 (미국 아님)"},
+
+  {type:'ox', q:"국내 거주 외국인 주민의 절반 이상이 수도권에 거주한다.", answer:'O',
+   expl:"맞아요. 서울·경기·인천 등 수도권에 절반 이상이 거주합니다.",
+   memo:"외국인 주민 절반 이상 = 수도권 거주"},
+
+  {type:'ox', q:"저출생·고령화로 생산 연령 인구가 증가하여 노동력이 남아돌고 있다.", answer:'X',
+   expl:"틀려요. 생산 연령 인구가 ‘감소’하여 노동력 부족 문제를 겪고 있어요.",
+   memo:"생산 연령 인구 = 감소 → 노동력 '부족'"},
+
+  {type:'ox', q:"다문화 사회로 유입되는 인구는 노동력 부족 문제 해결에 도움을 준다.", answer:'O',
+   expl:"맞아요. 외국인 근로자·국제결혼 이민자·외국 국적 동포 등이 일손이 부족한 곳에 노동력을 제공해요.",
+   memo:"유입 인구 = 노동력 부족 해결에 기여"},
+
+  {type:'ox', q:"편견은 어떤 집단에 대한 단순하고 지나치게 일반화된 생각을 말한다.", answer:'X',
+   expl:"틀려요. 그것은 ‘고정 관념’의 뜻이에요. 편견은 한쪽으로 치우친 생각을 말합니다.",
+   memo:"단순·일반화된 생각 = 고정 관념 (편견 아님)"},
+
+  {type:'ox', q:"자신의 문화를 절대시하여 상대 문화를 부정적으로 평가하면 편견과 차별로 이어질 수 있다.", answer:'O',
+   expl:"맞아요. 이런 태도는 문화적 소수자에 대한 편견·차별, 나아가 제노포비아로 이어질 수 있어요.",
+   memo:"자기 문화 절대시 → 편견·차별 → 제노포비아"},
+
+  {type:'ox', q:"제노포비아는 다른 문화권에서 온 사람을 혐오하거나 기피하는 현상이다.", answer:'O',
+   expl:"맞아요. ‘낯선 사람(제노스)’과 ‘공포(포보스)’를 합친 말입니다.",
+   memo:"제노포비아 = 외국인 혐오·기피"},
+
+  {type:'ox', q:"「외국인 근로자의 고용 등에 관한 법률」 제정은 갈등 해결을 위한 사회적 차원의 노력이다.", answer:'O',
+   expl:"맞아요. 법·제도 마련은 사회적 차원의 노력에 해당합니다.",
+   memo:"법·제도 마련 = 사회적 차원"},
+
+  {type:'ox', q:"다른 문화를 깊이 이해하려는 자세를 갖는 것은 개인적 차원의 노력이다.", answer:'O',
+   expl:"맞아요. 이해·인정·존중·소통은 개인적 차원의 노력이에요.",
+   memo:"이해·존중·소통 = 개인적 차원"},
+
+  {type:'ox', q:"동화주의(용광로)는 다양한 문화가 고유성을 유지하며 동등하게 조화를 이루는 것을 강조한다.", answer:'X',
+   expl:"틀려요. 그것은 다문화주의(샐러드 볼)의 설명이에요. 동화주의는 주류 문화로의 동화를 강조합니다.",
+   memo:"고유성 유지·동등한 조화 = 다문화주의(샐러드 볼) / 동화주의=주류로 동화"},
+
+  {type:'ox', q:"다문화주의(샐러드 볼)는 사회적 연대감·결속력이 약화될 수 있다는 한계가 있다.", answer:'O',
+   expl:"맞아요. 다양성을 강조하다 보면 사회 통합이 어려워질 수 있다는 한계가 지적됩니다.",
+   memo:"다문화주의 한계 = 연대감·결속력 약화 / 동화주의 한계 = 소수 문화 정체성 상실"},
+
+  {type:'ox', q:"다문화 사회에서는 다른 문화에 대한 이해가 부족하면 갈등이 발생할 수 있다.", answer:'O',
+   expl:"맞아요. 서로의 문화를 알지 못하면 오해가 생겨 갈등으로 이어질 수 있어요.",
+   memo:"이해 부족 → 오해 → 갈등 (그래서 소통이 중요)"}
+];
+
+const MARKS=['①','②','③','④','⑤'];
+let order = DATA.map((_,i)=>i);
+let pos = 0;
+const state = {};
+function norm(s){return (s||'').toString().trim().toLowerCase().replace(/\s+/g,'').replace(/[().,·「」]/g,'');}
+function st(idx){ return state[idx] || (state[idx]={picked:null,graded:false,correct:false}); }
+function updateTop(){
+  document.getElementById('pNow').textContent=Math.min(pos+1,order.length);
+  document.getElementById('pTotal').textContent=order.length;
+  document.getElementById('prog').style.width=((pos)/order.length*100)+'%';
+}
+function renderQuestion(){
+  updateTop();
+  const idx=order[pos]; const item=DATA[idx]; const s=st(idx);
+  const stage=document.getElementById('stage');
+  const tagMap={mc:['mc','객관식'],sa:['sa','단답형'],ox:['ox','O / X']};
+  const [tagCls,tagTxt]=tagMap[item.type];
+  let qhtml=item.q.replace(/\[\s*\]/g,'<span class="blank">　　</span>');
+  let body='';
+  if(item.type==='mc'){
+    body='<div class="opts">'+item.options.map((o,i)=>`<div class="opt" data-i="${i}"><span class="mk">${MARKS[i]}</span><span>${o}</span></div>`).join('')+'</div>';
+  }else if(item.type==='ox'){
+    body='<div class="ox"><button data-v="O">O</button><button data-v="X">X</button></div>';
+  }else{
+    body='<input class="sa-input" type="text" placeholder="정답을 입력하세요" autocomplete="off">';
+  }
+  const lastQ=(pos===order.length-1);
+  stage.innerHTML=`
+    <div class="q">
+      <div class="q-head"><span class="num">${pos+1}</span><span class="tag ${tagCls}">${tagTxt}</span></div>
+      <p class="q-text">${qhtml}</p>
+      ${body}
+      <div class="result"></div>
+      <div class="nav">
+        <button class="prev" id="btnPrev" ${pos===0?'disabled':''}>← 이전</button>
+        <button class="primary" id="btnPrimary">채점하기</button>
+      </div>
+    </div>`;
+  const card=stage.querySelector('.q');
+  if(item.type==='mc'){
+    card.querySelectorAll('.opt').forEach(el=>{
+      const i=+el.dataset.i;
+      if(s.picked===i) el.classList.add('sel');
+      el.addEventListener('click',()=>{ if(s.graded) return; card.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel')); el.classList.add('sel'); s.picked=i; });
+    });
+  }else if(item.type==='ox'){
+    card.querySelectorAll('.ox button').forEach(el=>{
+      if(s.picked===el.dataset.v) el.classList.add('sel');
+      el.addEventListener('click',()=>{ if(s.graded) return; card.querySelectorAll('.ox button').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); s.picked=el.dataset.v; });
+    });
+  }else{
+    const inp=card.querySelector('.sa-input');
+    if(s.picked!=null) inp.value=s.picked;
+    inp.addEventListener('input',()=>{ s.picked=inp.value; });
+    inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault(); document.getElementById('btnPrimary').click();}});
+    if(!s.graded) setTimeout(()=>inp.focus(),50);
+  }
+  document.getElementById('btnPrev').addEventListener('click',()=>{ if(pos>0){pos--; renderQuestion();} });
+  const primary=document.getElementById('btnPrimary');
+  if(s.graded){
+    showGraded(card,idx);
+    primary.textContent=lastQ?'결과 보기 →':'다음 문제 →';
+    primary.onclick=()=>goNext(lastQ);
+  }else{
+    primary.textContent='채점하기';
+    primary.onclick=()=>{ if(gradeCurrent(card,idx)){ primary.textContent=lastQ?'결과 보기 →':'다음 문제 →'; primary.onclick=()=>goNext(lastQ); } };
+  }
+}
+function gradeCurrent(card,idx){
+  const item=DATA[idx]; const s=st(idx);
+  if(s.picked==null || (item.type==='sa' && !norm(s.picked))){
+    const inp=card.querySelector('.sa-input'); if(inp) inp.focus();
+    card.querySelector('#btnPrimary').animate([{transform:'translateX(0)'},{transform:'translateX(-4px)'},{transform:'translateX(4px)'},{transform:'translateX(0)'}],{duration:220});
+    return false;
+  }
+  if(item.type==='mc') s.correct=(+s.picked===item.answer);
+  else if(item.type==='ox') s.correct=(s.picked===item.answer);
+  else s.correct=item.answers.some(a=>norm(a)===norm(s.picked));
+  s.graded=true; showGraded(card,idx); return true;
+}
+function showGraded(card,idx){
+  const item=DATA[idx]; const s=st(idx);
+  if(item.type==='mc'){
+    card.querySelectorAll('.opt').forEach(el=>{ el.style.cursor='default'; const i=+el.dataset.i; if(i===item.answer) el.classList.add('correct'); if(i===+s.picked && !s.correct) el.classList.add('incorrect'); });
+  }else if(item.type==='ox'){
+    card.querySelectorAll('.ox button').forEach(el=>{ el.style.cursor='default'; if(el.dataset.v===item.answer) el.classList.add('correct'); if(el.dataset.v===s.picked && !s.correct) el.classList.add('incorrect'); });
+  }else{
+    const inp=card.querySelector('.sa-input'); inp.readOnly=true; inp.classList.add(s.correct?'correct':'incorrect');
+  }
+  const ansShown = item.type==='mc'?MARKS[item.answer]+' '+item.options[item.answer] : item.type==='ox'?item.answer : item.shown;
+  const res=card.querySelector('.result');
+  res.innerHTML=`
+    <div class="verdict ${s.correct?'ok':'no'}"><span class="ic">${s.correct?'⭕':'❌'}</span>${s.correct?'정답이에요!':'오답이에요'}</div>
+    <p class="ans-line"><span class="lab">정답</span> · ${ansShown}</p>
+    <div class="expl"><span class="lab">해설</span>${item.expl}</div>
+    <div class="memo"><span class="lab">📌 암기 포인트</span>${item.memo}</div>`;
+  res.classList.add('show');
+}
+function goNext(lastQ){ if(lastQ){ showSummary(); } else { pos++; renderQuestion(); window.scrollTo({top:0,behavior:'smooth'}); } }
+function showSummary(){
+  document.getElementById('prog').style.width='100%';
+  document.getElementById('pNow').textContent=order.length;
+  const graded=order.filter(i=>state[i]&&state[i].graded);
+  const correct=graded.filter(i=>state[i].correct).length;
+  const total=order.length; const pct=Math.round(correct/total*100);
+  const wrong=order.filter(i=>state[i]&&state[i].graded&&!state[i].correct);
+  const types={mc:'객관식',sa:'단답형',ox:'O / X'};
+  const bd=Object.keys(types).map(t=>{
+    const tot=order.filter(i=>DATA[i].type===t).length; if(tot===0) return '';
+    const cor=order.filter(i=>DATA[i].type===t && state[i]&&state[i].correct).length;
+    return `<div class="bd"><div class="t">${types[t]}</div><div class="v">${cor} / ${tot}</div></div>`;
+  }).join('');
+  let msg;
+  if(pct===100) msg='완벽해요! 다 맞혔어요 🎉';
+  else if(pct>=80) msg='잘했어요! 거의 다 외웠네요 👍';
+  else if(pct>=60) msg='절반 넘게 맞혔어요. 틀린 것만 다시 보면 돼요.';
+  else msg='틀린 문제 위주로 한 번 더 풀어 봐요. 금방 늘어요!';
+  const C=2*Math.PI*52;
+  document.getElementById('stage').innerHTML=`
+    <div class="summary">
+      <div class="ring">
+        <svg width="120" height="120">
+          <circle cx="60" cy="60" r="52" fill="none" stroke="#e1e8e9" stroke-width="12"/>
+          <circle cx="60" cy="60" r="52" fill="none" stroke="#1f7a78" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct/100)}"/>
+        </svg>
+        <div class="pct"><b>${pct}%</b><span>정답률</span></div>
+      </div>
+      <div class="score-label">맞힌 문제</div>
+      <div class="score-big">${correct} <span style="font-size:24px;color:var(--muted);font-weight:700;">/ ${total}</span></div>
+      <div class="breakdown">${bd}</div>
+      <div class="summary-msg">${msg}</div>
+      <div class="sum-btns">
+        <button class="btn-wrong" id="sWrong" ${wrong.length===0?'disabled':''}>✏️ 오답만 다시 풀기 (${wrong.length}문제)</button>
+        <button class="btn-ghost" id="sRetry">↺ 전체 다시 풀기</button>
+        <button class="btn-ghost" id="sShuffle">🔀 순서 섞어서 다시</button>
+      </div>
+    </div>`;
+  document.getElementById('sWrong').addEventListener('click',()=>{ if(wrong.length===0) return; wrong.forEach(i=>state[i]={picked:null,graded:false,correct:false}); order=wrong.slice(); pos=0; renderQuestion(); window.scrollTo({top:0,behavior:'smooth'}); });
+  document.getElementById('sRetry').addEventListener('click',()=>resetAll(false));
+  document.getElementById('sShuffle').addEventListener('click',()=>resetAll(true));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function resetAll(shuffle){
+  for(const k in state) delete state[k];
+  order=DATA.map((_,i)=>i);
+  if(shuffle) for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
+  pos=0; renderQuestion(); window.scrollTo({top:0,behavior:'smooth'});
+}
+document.getElementById('btnShuffle').addEventListener('click',function(){ if(!confirm('순서를 섞고 처음부터 다시 풀까요? (현재 진행 기록은 지워져요)')) return; resetAll(true); });
+renderQuestion();
+</script>
+</body>
+</html>

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>통합사회 5-1단원 · 산업화와 도시화 퀴즈</title>
+<style>
+  :root{
+    --bg:#f5f7f3; --card:#ffffff; --ink:#1f2a24; --muted:#6b7a70; --line:#e3e8e0;
+    --teal:#2f7d5b; --teal-dark:#205c42; --teal-soft:#e7f1ea;
+    --right:#2f7d5b; --right-soft:#e7f3ec; --wrong:#c0473b; --wrong-soft:#fbeceb;
+    --amber:#9a6b15; --amber-soft:#fbf3e2;
+    --tag-mc:#3a6ea5; --tag-sa:#7a5aa6; --tag-ox:#b07a2a;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:680px;margin:0 auto;padding:0 18px 60px;}
+  header{padding:30px 0 16px;}
+  .eyebrow{font-size:13px;letter-spacing:.04em;color:var(--teal);font-weight:700;margin-bottom:6px;}
+  h1{font-size:24px;line-height:1.3;margin:0 0 6px;font-weight:800;letter-spacing:-.01em;}
+  .sub{color:var(--muted);font-size:14px;margin:0;}
+  .topbar{display:flex;align-items:center;gap:12px;margin:6px 0 18px;}
+  .pmeta{font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap;}
+  .pmeta b{color:var(--teal);}
+  .progress{flex:1;height:8px;background:var(--line);border-radius:99px;overflow:hidden;}
+  .progress > i{display:block;height:100%;width:0;background:var(--teal);transition:width .3s ease;border-radius:99px;}
+  .shuffle{font-size:12.5px;font-weight:600;padding:7px 12px;border-radius:8px;cursor:pointer;background:#fff;border:1px solid var(--line);color:var(--ink);transition:.15s;white-space:nowrap;}
+  .shuffle:hover{border-color:var(--teal);color:var(--teal);}
+  button{font-family:inherit;cursor:pointer;border:none;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 22px 20px;}
+  .q-head{display:flex;align-items:center;gap:9px;margin-bottom:14px;flex-wrap:wrap;}
+  .num{font-size:13px;font-weight:800;color:#fff;background:var(--teal-dark);min-width:30px;height:26px;padding:0 8px;border-radius:7px;display:flex;align-items:center;justify-content:center;}
+  .tag{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:99px;}
+  .tag.mc{color:var(--tag-mc);background:#eaf1f8;} .tag.sa{color:var(--tag-sa);background:#f2ecf8;} .tag.ox{color:var(--tag-ox);background:#f8f0e2;}
+  .q-text{font-size:17px;font-weight:600;margin:0 0 16px;letter-spacing:-.01em;line-height:1.55;}
+  .q-text .blank{color:var(--teal);font-weight:800;border-bottom:2px solid var(--teal);padding:0 16px;}
+  .opts{display:flex;flex-direction:column;gap:9px;}
+  .opt{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border:1px solid var(--line);border-radius:11px;background:#fff;cursor:pointer;transition:.13s;font-size:15px;}
+  .opt:hover{border-color:var(--teal);background:var(--teal-soft);}
+  .opt.sel{border-color:var(--teal);background:var(--teal-soft);}
+  .opt .mk{font-weight:800;color:var(--muted);flex-shrink:0;}
+  .opt.sel .mk{color:var(--teal);}
+  .opt.correct{border-color:var(--right);background:var(--right-soft);} .opt.correct .mk{color:var(--right);}
+  .opt.incorrect{border-color:var(--wrong);background:var(--wrong-soft);} .opt.incorrect .mk{color:var(--wrong);}
+  .ox{display:flex;gap:10px;}
+  .ox button{flex:1;padding:16px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:19px;font-weight:800;color:var(--ink);transition:.13s;}
+  .ox button:hover{border-color:var(--teal);background:var(--teal-soft);}
+  .ox button.sel{border-color:var(--teal);background:var(--teal-soft);color:var(--teal-dark);}
+  .ox button.correct{border-color:var(--right);background:var(--right-soft);color:var(--right);}
+  .ox button.incorrect{border-color:var(--wrong);background:var(--wrong-soft);color:var(--wrong);}
+  .sa-input{width:100%;padding:13px 15px;border:1px solid var(--line);border-radius:11px;font-size:16px;font-family:inherit;color:var(--ink);background:#fff;}
+  .sa-input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-soft);}
+  .sa-input.correct{border-color:var(--right);background:var(--right-soft);} .sa-input.incorrect{border-color:var(--wrong);background:var(--wrong-soft);}
+  .result{margin-top:16px;display:none;}
+  .result.show{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(-3px);}to{opacity:1;transform:none;}}
+  .verdict{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;margin-bottom:10px;}
+  .verdict.ok{color:var(--right);} .verdict.no{color:var(--wrong);} .verdict .ic{font-size:19px;}
+  .ans-line{font-size:14.5px;margin:0 0 10px;} .ans-line .lab{font-weight:800;color:var(--teal-dark);}
+  .expl{background:#fafbf9;border:1px solid var(--line);border-left:3px solid var(--teal);border-radius:8px;padding:12px 14px;font-size:14.5px;color:#36433b;margin-bottom:10px;}
+  .expl .lab{font-weight:800;display:block;margin-bottom:3px;color:var(--teal-dark);}
+  .memo{background:var(--amber-soft);border:1px solid #efe1c2;border-left:3px solid var(--amber);border-radius:8px;padding:12px 14px;font-size:14.5px;color:#6e500f;}
+  .memo .lab{font-weight:800;display:block;margin-bottom:3px;color:var(--amber);}
+  .nav{display:flex;gap:10px;margin-top:18px;align-items:center;}
+  .prev{font-size:14px;font-weight:600;padding:11px 16px;border-radius:10px;background:#fff;border:1px solid var(--line);color:var(--muted);transition:.15s;}
+  .prev:hover:not(:disabled){border-color:var(--teal);color:var(--teal);}
+  .prev:disabled{opacity:.4;cursor:default;}
+  .primary{flex:1;font-size:15px;font-weight:700;padding:13px;border-radius:11px;background:var(--teal);color:#fff;transition:.15s;}
+  .primary:hover{background:var(--teal-dark);}
+  .summary{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:30px 24px;text-align:center;}
+  .score-big{font-size:46px;font-weight:800;color:var(--teal);line-height:1;margin:6px 0;}
+  .score-label{font-size:15px;color:var(--muted);font-weight:600;}
+  .ring{width:120px;height:120px;margin:8px auto 14px;position:relative;}
+  .ring svg{transform:rotate(-90deg);}
+  .ring .pct{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .ring .pct b{font-size:30px;font-weight:800;color:var(--teal);line-height:1;}
+  .ring .pct span{font-size:12px;color:var(--muted);}
+  .breakdown{display:flex;gap:10px;justify-content:center;margin:18px 0 6px;flex-wrap:wrap;}
+  .bd{background:#fafbf9;border:1px solid var(--line);border-radius:10px;padding:10px 16px;min-width:90px;}
+  .bd .t{font-size:12px;color:var(--muted);font-weight:600;} .bd .v{font-size:17px;font-weight:800;color:var(--ink);margin-top:2px;}
+  .summary-msg{font-size:15px;color:var(--ink);margin:16px 0 6px;font-weight:600;}
+  .sum-btns{display:flex;flex-direction:column;gap:9px;margin-top:20px;}
+  .sum-btns button{font-size:15px;font-weight:700;padding:13px;border-radius:11px;transition:.15s;}
+  .btn-wrong{background:var(--wrong);color:#fff;} .btn-wrong:hover{background:#a53a30;} .btn-wrong:disabled{opacity:.4;cursor:default;}
+  .btn-ghost{background:#fff;border:1px solid var(--line);color:var(--ink);} .btn-ghost:hover{border-color:var(--teal);color:var(--teal);}
+  footer{text-align:center;color:var(--muted);font-size:12.5px;margin-top:26px;}
+  @media(max-width:520px){h1{font-size:21px;} .q-text{font-size:16px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">통합사회 · Ⅴ. 생활공간과 사회</div>
+    <h1>5-1단원 · 산업화와 도시화</h1>
+    <p class="sub">답을 고르거나 입력하고 <b>채점하기</b>를 누르면 정답·해설·암기 포인트가 나와요. 한 문제씩 풀고 <b>다음 문제 →</b>로 넘어가요.</p>
+  </header>
+  <div class="topbar" id="topbar">
+    <span class="pmeta"><b id="pNow">1</b> / <span id="pTotal">0</span></span>
+    <div class="progress"><i id="prog"></i></div>
+    <button class="shuffle" id="btnShuffle">🔀 순서 섞기</button>
+  </div>
+  <div id="stage"></div>
+  <footer>정지윤 내신 대비 · 교과서 본문 기반 자동 채점 퀴즈</footer>
+</div>
+
+<script>
+const DATA = [
+  // ===== 객관식 =====
+  {type:'mc', q:"다음 설명에 해당하는 개념은? “산업의 중심이 농업 중심에서 공업과 서비스업 중심으로 변화하는 현상”",
+   options:["산업화","도시화","교외화","이촌 향도","도시성"], answer:0,
+   expl:"산업 혁명으로 대량 생산과 분업이 활발해지며 산업의 중심이 공업·서비스업으로 옮겨가는 것이 산업화예요.",
+   memo:"산업화 = 산업 중심이 농업 → 공업·서비스업으로 변화"},
+
+  {type:'mc', q:"다음 설명에 해당하는 개념은? “전체 인구에서 도시 인구가 차지하는 비율이 높아지고 도시적 생활양식이 확대되는 현상”",
+   options:["도시화","산업화","대도시권","인구 공동화","교외화"], answer:0,
+   expl:"산업화로 이촌 향도가 활발해지며 도시 인구 비율이 높아지고 도시적 생활양식이 퍼지는 것이 도시화입니다.",
+   memo:"도시화 = 도시 인구 비율↑ + 도시적 생활양식 확대"},
+
+  {type:'mc', q:"산업화로 촌락 사람들이 일자리를 찾아 도시로 이동하는 현상을 무엇이라 하는가?",
+   options:["이촌 향도","교외화","인구 공동화","역도시화","귀농"], answer:0,
+   expl:"촌락(이촌)을 떠나 도시(향도)로 이동하는 현상이 이촌 향도예요. 도시화의 가속화 단계에서 활발하게 나타납니다.",
+   memo:"이촌 향도 = 촌락 → 도시 이동 (도시화 가속화의 원인)"},
+
+  {type:'mc', q:"우리나라의 산업화와 도시화에 대한 설명으로 옳지 <u>않은</u> 것은?",
+   options:[
+     "1960년대 이후 경제 개발 계획이 추진되며 본격화되었다.",
+     "수도권과 남동 임해 지역을 중심으로 진행되었다.",
+     "오늘날 대부분의 인구가 도시에 거주한다.",
+     "도시화율은 1960년 이후 지속적으로 낮아지고 있다.",
+     "산업 구조에서 농림어업의 비중이 감소하였다."], answer:3,
+   expl:"우리나라 도시화율은 1960년 39.1%에서 2022년 91.9%로 계속 ‘높아졌어요’. 10명 중 9명 이상이 도시에 살고 있습니다.",
+   memo:"우리나라 = 1960년대 경제 개발 → 수도권·남동 임해 중심 / 도시화율 계속 '상승'"},
+
+  {type:'mc', q:"도시화 단계에 대한 설명으로 옳지 <u>않은</u> 것은?",
+   options:[
+     "초기 단계에는 인구의 대부분이 촌락에 거주한다.",
+     "가속화 단계에는 이촌 향도로 도시화율이 급격히 증가한다.",
+     "종착 단계에는 인구의 대부분이 도시에 거주한다.",
+     "종착 단계에는 도시화 속도가 느려진다.",
+     "가속화 단계에는 도시화율이 거의 변하지 않는다."], answer:4,
+   expl:"도시화율이 급격히 증가하는 단계가 가속화 단계예요. 거의 변하지 않는 것은 ‘종착 단계’입니다.",
+   memo:"도시화 단계 ▸ 초기(촌락 거주) → 가속화(이촌 향도, 급증) → 종착(도시 거주, 정체)"},
+
+  {type:'mc', q:"산업 분류의 연결이 옳지 <u>않은</u> 것은?",
+   options:[
+     "1차 산업 — 농업·임업·어업",
+     "2차 산업 — 광업·공업",
+     "3차 산업 — 서비스업",
+     "3차 산업 — 건설업·수도·가스업",
+     "1차 산업 — 제조업"], answer:4,
+   expl:"제조업(공업)은 2차 산업이에요. 1차 산업은 농림어업입니다.",
+   memo:"1차=농림어업 / 2차=광공업(제조업) / 3차=서비스업·건설·수도·가스"},
+
+  {type:'mc', q:"산업화·도시화로 나타난 생활공간의 변화로 옳지 <u>않은</u> 것은?",
+   options:[
+     "아파트·공동 주택·고층 건물이 들어서며 토지 이용의 집약도가 높아졌다.",
+     "도시 내부에 상업·주거·공업 지역 등 다양한 공간이 형성되었다.",
+     "교외화가 진행되어 대도시권이 형성되었다.",
+     "지표의 포장 면적이 줄고 녹지가 늘어났다.",
+     "도시 내 하천이 인위적으로 개발되었다."], answer:3,
+   expl:"포장 면적은 ‘늘고’ 녹지는 ‘감소’했어요. ④는 반대로 서술되었습니다.",
+   memo:"생활공간 변화 = 토지 집약도↑·도시 내부 분화·교외화·대도시권 / 포장 면적↑·녹지↓"},
+
+  {type:'mc', q:"다음 설명에 해당하는 개념은? “대도시의 인구나 기능, 시설 등이 도시 주변으로 확산되는 현상”",
+   options:["교외화","인구 공동화","이촌 향도","산업화","도시성"], answer:0,
+   expl:"교외화가 진행되면 대도시와 주변 지역이 하나의 생활권(대도시권)을 이루고 도시적 경관이 확대됩니다.",
+   memo:"교외화 = 대도시 인구·기능이 '주변으로 확산' → 대도시권 형성"},
+
+  {type:'mc', q:"1977년과 비교한 2022년 우리나라 국토 용도별 이용 면적 변화로 옳은 것은?",
+   options:[
+     "대지와 도로 면적은 늘고, 임야와 논밭 면적은 줄었다.",
+     "임야와 논밭 면적이 모두 늘었다.",
+     "대지 면적은 줄고 도로 면적만 늘었다.",
+     "도로 면적이 가장 크게 감소하였다.",
+     "논밭 면적이 가장 크게 증가하였다."], answer:0,
+   expl:"산업화·도시화로 대지(+89.9%)와 도로(+114%)는 크게 늘고, 임야(−3.4%)와 논밭(−16.5%)은 줄었어요.",
+   memo:"면적 변화 ▸ 대지·도로 '증가' / 임야·논밭 '감소'"},
+
+  {type:'mc', q:"산업화·도시화로 나타난 생활양식의 변화로 옳지 <u>않은</u> 것은?",
+   options:[
+     "직업이 분화하고 전문성이 증가하였다.",
+     "도시성이 확산되어 효율성과 합리성을 추구하는 경향이 늘었다.",
+     "2차적 인간관계가 늘면서 사회적 유대감이 약해졌다.",
+     "개인주의 가치관이 확산되었다.",
+     "대가족 비중이 늘고 1인 가구가 감소하였다."], answer:4,
+   expl:"가족 형태는 대가족 → 핵가족으로 변하고 1인 가구는 ‘증가’했어요. ⑤는 반대입니다.",
+   memo:"생활양식 변화 = 직업 분화·도시성 확산·2차적 인간관계↑·개인주의↑·핵가족화·1인 가구↑"},
+
+  {type:'mc', q:"다음 설명에 해당하는 개념은? “도시에 거주하는 사람들의 생활양식과 문화적 특징”",
+   options:["도시성","도시화","산업화","교외화","개인주의"], answer:0,
+   expl:"도시성이 확산되면 효율성·합리성을 추구하고 2차적 인간관계가 늘어 사회적 유대감이 약해져요.",
+   memo:"도시성 = 도시 사람들의 생활양식·문화적 특징"},
+
+  {type:'mc', q:"산업화·도시화에 따른 가족 형태 변화로 옳은 것은?",
+   options:[
+     "보편적인 가족 형태가 대가족에서 핵가족으로 변화하였다.",
+     "핵가족이 줄고 대가족이 늘었다.",
+     "1인 가구의 비중이 점차 줄어들고 있다.",
+     "가구당 구성원 수가 점차 늘고 있다.",
+     "결혼·출산을 기피하는 인구가 줄어들고 있다."], answer:0,
+   expl:"대가족에서 핵가족으로 바뀌고, 1인 가구 비중은 늘며 가구당 구성원 수는 줄어들고 있어요.",
+   memo:"가족 변화 = 대가족 → 핵가족 / 1인 가구↑ / 가구원 수↓"},
+
+  {type:'mc', q:"도심에 대한 설명으로 옳지 <u>않은</u> 것은?",
+   options:[
+     "접근성이 높고 교통이 편리하여 유동 인구가 많다.",
+     "행정·금융 기관, 기업 본사, 백화점 등 고층 건물이 밀집한다.",
+     "상주 인구 밀도가 감소하는 인구 공동화 현상이 나타난다.",
+     "주거 기능의 이심 현상으로 출퇴근 시 교통 체증이 발생한다.",
+     "도시 외곽에 형성되며 대규모 아파트 단지가 들어선다."], answer:4,
+   expl:"도시 외곽의 대규모 아파트 단지는 ‘주거 지역’의 특징이에요. 도심은 도시 중심부의 업무·상업 기능 밀집 지역입니다.",
+   memo:"도심 = 도시 중심부, 업무·상업 기능 밀집, 인구 공동화 / 외곽 아파트 단지는 주거 지역"},
+
+  {type:'mc', q:"도심에서 낮에는 인구가 많지만 밤에는 상주 인구가 빠져나가 인구 밀도가 낮아지는 현상을 무엇이라 하는가?",
+   options:["인구 공동화 현상","열섬 현상","교외화","인간 소외 현상","이촌 향도"], answer:0,
+   expl:"도심의 주거 기능이 빠져나가(이심) 밤에 인구가 줄어드는 현상이 인구 공동화예요. 출퇴근 시 교통 체증의 원인이 되기도 합니다.",
+   memo:"인구 공동화 = 도심 낮 인구↑·밤 상주 인구↓ (도넛 현상)"},
+
+  {type:'mc', q:"산업화·도시화에 따른 문제와 그 유형의 연결이 옳지 <u>않은</u> 것은?",
+   options:[
+     "주택 부족·집값 상승 — 주택 문제",
+     "교통 혼잡·주차난 — 교통 문제",
+     "열섬 현상·녹지 감소 — 생태환경 문제",
+     "지역 격차·고독사·인간 소외 — 사회 문제",
+     "직업 분화·전문성 증가 — 도시 문제"], answer:4,
+   expl:"직업 분화·전문성 증가는 ‘문제’가 아니라 생활양식의 변화예요. ⑤는 문제 유형으로 잘못 분류되었습니다.",
+   memo:"문제 유형 ▸ 주택/교통=도시 문제 / 열섬·녹지↓=생태환경 / 격차·고독사·소외=사회 문제"},
+
+  {type:'mc', q:"다음 설명에 해당하는 현상은? “자동차·에어컨 실외기의 인공 열과 콘크리트·아스팔트가 내뿜는 열로 도시 지역 기온이 주변 지역보다 높아지는 현상”",
+   options:["열섬 현상","인구 공동화","인간 소외 현상","교외화","도시성"], answer:0,
+   expl:"도시 지역의 기온이 주변보다 높아지는 현상이 열섬 현상이에요. 포장 면적 증가·녹지 감소와 관련 깊습니다.",
+   memo:"열섬 현상 = 도시 기온이 주변보다 '높아짐' (인공 열·포장 면적)"},
+
+  {type:'mc', q:"다음 설명에 해당하는 현상은? “기계화·분업화·자동화로 인간이 생산 활동의 수단으로 전락하여 노동의 만족감·성취감이 줄어드는 현상”",
+   options:["인간 소외 현상","열섬 현상","인구 공동화","이촌 향도","도시성"], answer:0,
+   expl:"인간이 기계의 부속품처럼 취급되어 노동의 의미를 잃는 것이 인간 소외 현상이에요.",
+   memo:"인간 소외 현상 = 인간이 생산 수단(기계 부속품)으로 전락 → 만족감·성취감↓"},
+
+  {type:'mc', q:"산업화·도시화 문제 해결을 위한 노력의 차원이 잘못 연결된 것은?",
+   options:[
+     "지역적 차원 — 주택 공급 확대, 도시 기반 시설 확충",
+     "지역적 차원 — 녹지 면적 확대, 생태 하천 복원",
+     "국가적 차원 — 균형 개발 정책 마련",
+     "국가적 차원 — 혁신 도시·신도시 개발 사업",
+     "지역적 차원 — 수도권 공공 기관을 지방으로 이전"], answer:4,
+   expl:"수도권 공공 기관의 지방 이전(혁신 도시 사업)은 ‘국가적 차원’의 균형 개발 노력이에요.",
+   memo:"지역적 차원=주택·기반 시설·녹지·복지 / 국가적 차원=균형 개발·혁신 도시·신도시·복지 제도"},
+
+  {type:'mc', q:"혁신 도시에 대한 설명으로 옳지 <u>않은</u> 것은?",
+   options:[
+     "지방 균형 발전을 목적으로 지역 성장 거점에 조성하는 미래형 도시이다.",
+     "수도권에 집중된 공공 기관을 지방으로 이전한다.",
+     "이전된 공공 기관과 지역 기업·대학·연구소가 협력한다.",
+     "수도권 과밀 현상 해소, 지역 특화 산업 육성 효과가 있다.",
+     "수도권에 인구와 기능을 더욱 집중시키기 위한 정책이다."], answer:4,
+   expl:"혁신 도시는 수도권 과밀을 ‘완화’하고 지방 균형 발전을 꾀하는 정책이에요. ⑤는 정반대입니다.",
+   memo:"혁신 도시 = 공공 기관 지방 이전 → 수도권 과밀 '해소'·지역 균형 발전"},
+
+  // ===== 단답형 (핵심 개념) =====
+  {type:'sa', q:"산업의 중심이 농업 중심에서 공업과 서비스업 중심으로 변화하는 현상을 [   ]라고 한다.",
+   answers:["산업화"], shown:"산업화",
+   expl:"산업 혁명으로 대량 생산과 분업이 활발해지면서 이루어진 변화예요.",
+   memo:"산업화 = 농업 → 공업·서비스업 중심으로 변화"},
+
+  {type:'sa', q:"전체 인구에서 도시 인구가 차지하는 비율이 높아지고 도시적 생활양식이 확대되는 현상을 [   ]라고 한다.",
+   answers:["도시화"], shown:"도시화",
+   expl:"산업화로 이촌 향도가 활발해지면서 빠르게 진행되었어요.",
+   memo:"도시화 = 도시 인구 비율↑ + 도시적 생활양식 확대"},
+
+  {type:'sa', q:"산업화로 촌락 사람들이 일자리를 찾아 도시로 이동하는 현상을 [   ] 현상이라고 한다.",
+   answers:["이촌향도","이촌 향도"], shown:"이촌 향도",
+   expl:"도시화의 가속화 단계에서 활발하게 나타나는 인구 이동이에요.",
+   memo:"이촌 향도 = 촌락 → 도시 인구 이동"},
+
+  {type:'sa', q:"대도시의 인구·기능·시설 등이 도시 주변으로 확산되는 현상을 [   ]라고 한다.",
+   answers:["교외화"], shown:"교외화",
+   expl:"교외화로 대도시와 주변 지역이 하나의 생활권(대도시권)을 이루게 돼요.",
+   memo:"교외화 = 대도시 기능이 주변으로 확산"},
+
+  {type:'sa', q:"교외화가 진행되어 대도시와 주변 지역이 하나의 생활권을 이루는 것을 [   ]이라고 한다.",
+   answers:["대도시권"], shown:"대도시권",
+   expl:"도시의 기능과 영향력이 커지면서 주변 지역까지 하나의 생활권으로 묶이는 것이에요.",
+   memo:"대도시권 = 대도시 + 주변 지역이 하나의 생활권"},
+
+  {type:'sa', q:"도시에 거주하는 사람들의 생활양식과 문화적 특징을 [   ]이라고 한다.",
+   answers:["도시성"], shown:"도시성",
+   expl:"도시성이 확산되면 효율성·합리성 추구, 2차적 인간관계 증가가 나타나요.",
+   memo:"도시성 = 도시 사람들의 생활양식·문화적 특징"},
+
+  {type:'sa', q:"한 쌍의 부부와 미혼의 자녀만으로 이루어진 가정을 [   ]이라고 한다.",
+   answers:["핵가족"], shown:"핵가족",
+   expl:"산업화·도시화로 대가족에서 핵가족으로 가족 형태가 변화했어요.",
+   memo:"핵가족 = 부부 + 미혼 자녀 (대가족에서 변화)"},
+
+  {type:'sa', q:"인공 열 등으로 도시 지역의 기온이 주변 지역보다 높아지는 현상을 [   ] 현상이라고 한다.",
+   answers:["열섬"], shown:"열섬 (현상)",
+   expl:"콘크리트·아스팔트 포장 면적 증가와 녹지 감소가 주요 원인이에요.",
+   memo:"열섬 현상 = 도시 기온이 주변보다 높아짐"},
+
+  {type:'sa', q:"인간이 기계의 부속품처럼 전락하여 노동의 만족감·성취감이 줄어드는 현상을 [   ] 현상이라고 한다.",
+   answers:["인간소외","인간 소외"], shown:"인간 소외 (현상)",
+   expl:"산업화에 따른 기계화·분업화·자동화 과정에서 나타나는 사회 문제예요.",
+   memo:"인간 소외 현상 = 인간이 생산 수단으로 전락"},
+
+  {type:'sa', q:"도심에서 낮에는 인구가 많지만 밤에는 상주 인구가 빠져나가 인구 밀도가 낮아지는 현상을 [   ] 현상이라고 한다.",
+   answers:["인구공동화","인구 공동화"], shown:"인구 공동화 (현상)",
+   expl:"도심의 주거 기능이 외곽으로 빠져나가면서(이심) 나타나는 현상이에요.",
+   memo:"인구 공동화 = 도심 밤 상주 인구↓ (도넛 현상)"},
+
+  {type:'sa', q:"지방 균형 발전을 위해 수도권 공공 기관을 지방으로 이전하여 지역 성장 거점에 조성하는 미래형 도시를 [   ]라고 한다.",
+   answers:["혁신도시","혁신 도시"], shown:"혁신 도시",
+   expl:"수도권 과밀 해소와 지역 특화 산업 육성을 목적으로 하는 국가적 차원의 노력이에요.",
+   memo:"혁신 도시 = 공공 기관 지방 이전 → 균형 발전"},
+
+  // ===== O/X =====
+  {type:'ox', q:"산업화는 산업의 중심이 공업·서비스업에서 농업 중심으로 변화하는 현상이다.", answer:'X',
+   expl:"틀려요. 방향이 반대예요. 산업화는 ‘농업 중심에서 공업·서비스업 중심으로’ 변화하는 현상입니다.",
+   memo:"산업화 = 농업 → 공업·서비스업 (방향 주의!)"},
+
+  {type:'ox', q:"우리나라는 1960년대 이후 경제 개발 계획이 추진되며 산업화·도시화가 본격화되었다.", answer:'O',
+   expl:"맞아요. 수도권과 남동 임해 지역을 중심으로 본격적으로 진행되었어요.",
+   memo:"우리나라 산업화·도시화 = 1960년대 경제 개발 계획부터"},
+
+  {type:'ox', q:"도시화 가속화 단계에서는 이촌 향도로 도시화율이 급격히 증가한다.", answer:'O',
+   expl:"맞아요. 촌락 사람들이 도시로 대거 이동하며 도시화율이 빠르게 올라가는 단계입니다.",
+   memo:"가속화 단계 = 이촌 향도 → 도시화율 급증"},
+
+  {type:'ox', q:"광업과 공업은 3차 산업에 해당한다.", answer:'X',
+   expl:"틀려요. 광업·공업은 2차 산업(광공업)이에요. 3차 산업은 서비스업·건설·수도·가스 등입니다.",
+   memo:"광공업 = 2차 산업 (3차 아님)"},
+
+  {type:'ox', q:"산업화·도시화로 토지 이용의 집약도가 높아졌다.", answer:'O',
+   expl:"맞아요. 제한된 공간을 효율적으로 쓰기 위해 아파트·고층 건물이 들어서며 집약도가 높아졌어요.",
+   memo:"도시 공간 = 토지 이용 '집약도↑'"},
+
+  {type:'ox', q:"산업화·도시화로 도시 내 지표의 포장 면적이 늘고 녹지가 감소하였다.", answer:'O',
+   expl:"맞아요. 농경지·산림에 주택·공장·도로가 들어서며 포장 면적이 늘고 녹지가 줄었어요.",
+   memo:"생태환경 변화 = 포장 면적↑ / 녹지↓"},
+
+  {type:'ox', q:"도시성이 확산되면서 2차적 인간관계가 늘어 사회적 유대감이 약해졌다.", answer:'O',
+   expl:"맞아요. 특정 목적을 위한 수단적·간접적 관계가 늘면서 유대감이 약해졌습니다.",
+   memo:"도시성 확산 → 2차적 인간관계↑ → 유대감↓"},
+
+  {type:'ox', q:"산업화·도시화로 가족 형태가 핵가족에서 대가족으로 변화하였다.", answer:'X',
+   expl:"틀려요. 방향이 반대예요. ‘대가족에서 핵가족으로’ 변화하였습니다.",
+   memo:"가족 변화 = 대가족 → 핵가족 (방향 주의!)"},
+
+  {type:'ox', q:"1인 가구의 비중은 점차 감소하고 있다.", answer:'X',
+   expl:"틀려요. 핵가족화·고령화·개인주의 확산 등으로 1인 가구 비중은 ‘증가’하고 있어요.",
+   memo:"1인 가구 = 비중 '증가'"},
+
+  {type:'ox', q:"도심에서는 상주 인구 밀도가 감소하는 인구 공동화 현상이 나타난다.", answer:'O',
+   expl:"맞아요. 도심의 주거 기능이 외곽으로 빠져나가며 밤에는 인구가 줄어듭니다.",
+   memo:"도심 = 인구 공동화 현상"},
+
+  {type:'ox', q:"열섬 현상은 도시 기온이 주변 지역보다 낮아지는 현상이다.", answer:'X',
+   expl:"틀려요. 열섬 현상은 도시 기온이 주변보다 ‘높아지는’ 현상입니다.",
+   memo:"열섬 현상 = 도시 기온 '높아짐' (낮아짐 아님)"},
+
+  {type:'ox', q:"주택 부족, 집값 상승, 교통 혼잡은 도시 문제에 해당한다.", answer:'O',
+   expl:"맞아요. 도시로 인구·기능이 집중되면서 나타나는 대표적인 도시 문제예요.",
+   memo:"도시 문제 = 주택 부족·집값 상승·교통 혼잡"},
+
+  {type:'ox', q:"주택 공급 확대와 도시 기반 시설 확충은 지역적 차원의 해결 노력이다.", answer:'O',
+   expl:"맞아요. 도시 내 주택·교통 문제를 푸는 지역적 차원의 노력입니다.",
+   memo:"지역적 차원 = 주택 공급·기반 시설 확충"},
+
+  {type:'ox', q:"수도권 공공 기관을 지방으로 이전하는 혁신 도시 사업은 국가적 차원의 노력이다.", answer:'O',
+   expl:"맞아요. 균형 개발 정책의 하나로, 수도권 과밀을 해소하기 위한 국가적 차원의 노력이에요.",
+   memo:"혁신 도시 사업 = 국가적 차원(균형 개발)"},
+
+  {type:'ox', q:"혁신 도시는 수도권에 인구와 기능을 더 집중시키기 위한 정책이다.", answer:'X',
+   expl:"틀려요. 혁신 도시는 수도권 과밀을 ‘해소’하고 지방 균형 발전을 이루기 위한 정책입니다.",
+   memo:"혁신 도시 = 수도권 과밀 '해소'(집중 X)"}
+];
+
+const MARKS=['①','②','③','④','⑤'];
+let order = DATA.map((_,i)=>i);
+let pos = 0;
+const state = {};
+function norm(s){return (s||'').toString().trim().toLowerCase().replace(/\s+/g,'').replace(/[().,·「」]/g,'');}
+function st(idx){ return state[idx] || (state[idx]={picked:null,graded:false,correct:false}); }
+function updateTop(){
+  document.getElementById('pNow').textContent=Math.min(pos+1,order.length);
+  document.getElementById('pTotal').textContent=order.length;
+  document.getElementById('prog').style.width=((pos)/order.length*100)+'%';
+}
+function renderQuestion(){
+  updateTop();
+  const idx=order[pos]; const item=DATA[idx]; const s=st(idx);
+  const stage=document.getElementById('stage');
+  const tagMap={mc:['mc','객관식'],sa:['sa','단답형'],ox:['ox','O / X']};
+  const [tagCls,tagTxt]=tagMap[item.type];
+  let qhtml=item.q.replace(/\[\s*\]/g,'<span class="blank">　　</span>');
+  let body='';
+  if(item.type==='mc'){
+    body='<div class="opts">'+item.options.map((o,i)=>`<div class="opt" data-i="${i}"><span class="mk">${MARKS[i]}</span><span>${o}</span></div>`).join('')+'</div>';
+  }else if(item.type==='ox'){
+    body='<div class="ox"><button data-v="O">O</button><button data-v="X">X</button></div>';
+  }else{
+    body='<input class="sa-input" type="text" placeholder="정답을 입력하세요" autocomplete="off">';
+  }
+  const lastQ=(pos===order.length-1);
+  stage.innerHTML=`
+    <div class="q">
+      <div class="q-head"><span class="num">${pos+1}</span><span class="tag ${tagCls}">${tagTxt}</span></div>
+      <p class="q-text">${qhtml}</p>
+      ${body}
+      <div class="result"></div>
+      <div class="nav">
+        <button class="prev" id="btnPrev" ${pos===0?'disabled':''}>← 이전</button>
+        <button class="primary" id="btnPrimary">채점하기</button>
+      </div>
+    </div>`;
+  const card=stage.querySelector('.q');
+  if(item.type==='mc'){
+    card.querySelectorAll('.opt').forEach(el=>{
+      const i=+el.dataset.i;
+      if(s.picked===i) el.classList.add('sel');
+      el.addEventListener('click',()=>{ if(s.graded) return; card.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel')); el.classList.add('sel'); s.picked=i; });
+    });
+  }else if(item.type==='ox'){
+    card.querySelectorAll('.ox button').forEach(el=>{
+      if(s.picked===el.dataset.v) el.classList.add('sel');
+      el.addEventListener('click',()=>{ if(s.graded) return; card.querySelectorAll('.ox button').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); s.picked=el.dataset.v; });
+    });
+  }else{
+    const inp=card.querySelector('.sa-input');
+    if(s.picked!=null) inp.value=s.picked;
+    inp.addEventListener('input',()=>{ s.picked=inp.value; });
+    inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault(); document.getElementById('btnPrimary').click();}});
+    if(!s.graded) setTimeout(()=>inp.focus(),50);
+  }
+  document.getElementById('btnPrev').addEventListener('click',()=>{ if(pos>0){pos--; renderQuestion();} });
+  const primary=document.getElementById('btnPrimary');
+  if(s.graded){
+    showGraded(card,idx);
+    primary.textContent=lastQ?'결과 보기 →':'다음 문제 →';
+    primary.onclick=()=>goNext(lastQ);
+  }else{
+    primary.textContent='채점하기';
+    primary.onclick=()=>{ if(gradeCurrent(card,idx)){ primary.textContent=lastQ?'결과 보기 →':'다음 문제 →'; primary.onclick=()=>goNext(lastQ); } };
+  }
+}
+function gradeCurrent(card,idx){
+  const item=DATA[idx]; const s=st(idx);
+  if(s.picked==null || (item.type==='sa' && !norm(s.picked))){
+    const inp=card.querySelector('.sa-input'); if(inp) inp.focus();
+    card.querySelector('#btnPrimary').animate([{transform:'translateX(0)'},{transform:'translateX(-4px)'},{transform:'translateX(4px)'},{transform:'translateX(0)'}],{duration:220});
+    return false;
+  }
+  if(item.type==='mc') s.correct=(+s.picked===item.answer);
+  else if(item.type==='ox') s.correct=(s.picked===item.answer);
+  else s.correct=item.answers.some(a=>norm(a)===norm(s.picked));
+  s.graded=true; showGraded(card,idx); return true;
+}
+function showGraded(card,idx){
+  const item=DATA[idx]; const s=st(idx);
+  if(item.type==='mc'){
+    card.querySelectorAll('.opt').forEach(el=>{ el.style.cursor='default'; const i=+el.dataset.i; if(i===item.answer) el.classList.add('correct'); if(i===+s.picked && !s.correct) el.classList.add('incorrect'); });
+  }else if(item.type==='ox'){
+    card.querySelectorAll('.ox button').forEach(el=>{ el.style.cursor='default'; if(el.dataset.v===item.answer) el.classList.add('correct'); if(el.dataset.v===s.picked && !s.correct) el.classList.add('incorrect'); });
+  }else{
+    const inp=card.querySelector('.sa-input'); inp.readOnly=true; inp.classList.add(s.correct?'correct':'incorrect');
+  }
+  const ansShown = item.type==='mc'?MARKS[item.answer]+' '+item.options[item.answer] : item.type==='ox'?item.answer : item.shown;
+  const res=card.querySelector('.result');
+  res.innerHTML=`
+    <div class="verdict ${s.correct?'ok':'no'}"><span class="ic">${s.correct?'⭕':'❌'}</span>${s.correct?'정답이에요!':'오답이에요'}</div>
+    <p class="ans-line"><span class="lab">정답</span> · ${ansShown}</p>
+    <div class="expl"><span class="lab">해설</span>${item.expl}</div>
+    <div class="memo"><span class="lab">📌 암기 포인트</span>${item.memo}</div>`;
+  res.classList.add('show');
+}
+function goNext(lastQ){ if(lastQ){ showSummary(); } else { pos++; renderQuestion(); window.scrollTo({top:0,behavior:'smooth'}); } }
+function showSummary(){
+  document.getElementById('prog').style.width='100%';
+  document.getElementById('pNow').textContent=order.length;
+  const graded=order.filter(i=>state[i]&&state[i].graded);
+  const correct=graded.filter(i=>state[i].correct).length;
+  const total=order.length; const pct=Math.round(correct/total*100);
+  const wrong=order.filter(i=>state[i]&&state[i].graded&&!state[i].correct);
+  const types={mc:'객관식',sa:'단답형',ox:'O / X'};
+  const bd=Object.keys(types).map(t=>{
+    const tot=order.filter(i=>DATA[i].type===t).length; if(tot===0) return '';
+    const cor=order.filter(i=>DATA[i].type===t && state[i]&&state[i].correct).length;
+    return `<div class="bd"><div class="t">${types[t]}</div><div class="v">${cor} / ${tot}</div></div>`;
+  }).join('');
+  let msg;
+  if(pct===100) msg='완벽해요! 다 맞혔어요 🎉';
+  else if(pct>=80) msg='잘했어요! 거의 다 외웠네요 👍';
+  else if(pct>=60) msg='절반 넘게 맞혔어요. 틀린 것만 다시 보면 돼요.';
+  else msg='틀린 문제 위주로 한 번 더 풀어 봐요. 금방 늘어요!';
+  const C=2*Math.PI*52;
+  document.getElementById('stage').innerHTML=`
+    <div class="summary">
+      <div class="ring">
+        <svg width="120" height="120">
+          <circle cx="60" cy="60" r="52" fill="none" stroke="#e3e8e0" stroke-width="12"/>
+          <circle cx="60" cy="60" r="52" fill="none" stroke="#2f7d5b" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct/100)}"/>
+        </svg>
+        <div class="pct"><b>${pct}%</b><span>정답률</span></div>
+      </div>
+      <div class="score-label">맞힌 문제</div>
+      <div class="score-big">${correct} <span style="font-size:24px;color:var(--muted);font-weight:700;">/ ${total}</span></div>
+      <div class="breakdown">${bd}</div>
+      <div class="summary-msg">${msg}</div>
+      <div class="sum-btns">
+        <button class="btn-wrong" id="sWrong" ${wrong.length===0?'disabled':''}>✏️ 오답만 다시 풀기 (${wrong.length}문제)</button>
+        <button class="btn-ghost" id="sRetry">↺ 전체 다시 풀기</button>
+        <button class="btn-ghost" id="sShuffle">🔀 순서 섞어서 다시</button>
+      </div>
+    </div>`;
+  document.getElementById('sWrong').addEventListener('click',()=>{ if(wrong.length===0) return; wrong.forEach(i=>state[i]={picked:null,graded:false,correct:false}); order=wrong.slice(); pos=0; renderQuestion(); window.scrollTo({top:0,behavior:'smooth'}); });
+  document.getElementById('sRetry').addEventListener('click',()=>resetAll(false));
+  document.getElementById('sShuffle').addEventListener('click',()=>resetAll(true));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function resetAll(shuffle){
+  for(const k in state) delete state[k];
+  order=DATA.map((_,i)=>i);
+  if(shuffle) for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
+  pos=0; renderQuestion(); window.scrollTo({top:0,behavior:'smooth'});
+}
+document.getElementById('btnShuffle').addEventListener('click',function(){ if(!confirm('순서를 섞고 처음부터 다시 풀까요? (현재 진행 기록은 지워져요)')) return; resetAll(true); });
+renderQuestion();
+</script>
+</body>
+</html>

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>통합사회 5-2단원 · 교통·통신과 과학기술의 발달 퀴즈</title>
+<style>
+  :root{
+    --bg:#f5f7f3; --card:#ffffff; --ink:#1f2a24; --muted:#6b7a70; --line:#e3e8e0;
+    --teal:#2f7d5b; --teal-dark:#205c42; --teal-soft:#e7f1ea;
+    --right:#2f7d5b; --right-soft:#e7f3ec; --wrong:#c0473b; --wrong-soft:#fbeceb;
+    --amber:#9a6b15; --amber-soft:#fbf3e2;
+    --tag-mc:#3a6ea5; --tag-sa:#7a5aa6; --tag-ox:#b07a2a;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:680px;margin:0 auto;padding:0 18px 60px;}
+  header{padding:30px 0 16px;}
+  .eyebrow{font-size:13px;letter-spacing:.04em;color:var(--teal);font-weight:700;margin-bottom:6px;}
+  h1{font-size:24px;line-height:1.3;margin:0 0 6px;font-weight:800;letter-spacing:-.01em;}
+  .sub{color:var(--muted);font-size:14px;margin:0;}
+  .topbar{display:flex;align-items:center;gap:12px;margin:6px 0 18px;}
+  .pmeta{font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap;}
+  .pmeta b{color:var(--teal);}
+  .progress{flex:1;height:8px;background:var(--line);border-radius:99px;overflow:hidden;}
+  .progress > i{display:block;height:100%;width:0;background:var(--teal);transition:width .3s ease;border-radius:99px;}
+  .shuffle{font-size:12.5px;font-weight:600;padding:7px 12px;border-radius:8px;cursor:pointer;background:#fff;border:1px solid var(--line);color:var(--ink);transition:.15s;white-space:nowrap;}
+  .shuffle:hover{border-color:var(--teal);color:var(--teal);}
+  button{font-family:inherit;cursor:pointer;border:none;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 22px 20px;}
+  .q-head{display:flex;align-items:center;gap:9px;margin-bottom:14px;flex-wrap:wrap;}
+  .num{font-size:13px;font-weight:800;color:#fff;background:var(--teal-dark);min-width:30px;height:26px;padding:0 8px;border-radius:7px;display:flex;align-items:center;justify-content:center;}
+  .tag{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:99px;}
+  .tag.mc{color:var(--tag-mc);background:#eaf1f8;} .tag.sa{color:var(--tag-sa);background:#f2ecf8;} .tag.ox{color:var(--tag-ox);background:#f8f0e2;}
+  .q-text{font-size:17px;font-weight:600;margin:0 0 16px;letter-spacing:-.01em;line-height:1.55;}
+  .q-text .blank{color:var(--teal);font-weight:800;border-bottom:2px solid var(--teal);padding:0 16px;}
+  .opts{display:flex;flex-direction:column;gap:9px;}
+  .opt{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border:1px solid var(--line);border-radius:11px;background:#fff;cursor:pointer;transition:.13s;font-size:15px;}
+  .opt:hover{border-color:var(--teal);background:var(--teal-soft);}
+  .opt.sel{border-color:var(--teal);background:var(--teal-soft);}
+  .opt .mk{font-weight:800;color:var(--muted);flex-shrink:0;}
+  .opt.sel .mk{color:var(--teal);}
+  .opt.correct{border-color:var(--right);background:var(--right-soft);} .opt.correct .mk{color:var(--right);}
+  .opt.incorrect{border-color:var(--wrong);background:var(--wrong-soft);} .opt.incorrect .mk{color:var(--wrong);}
+  .ox{display:flex;gap:10px;}
+  .ox button{flex:1;padding:16px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:19px;font-weight:800;color:var(--ink);transition:.13s;}
+  .ox button:hover{border-color:var(--teal);background:var(--teal-soft);}
+  .ox button.sel{border-color:var(--teal);background:var(--teal-soft);color:var(--teal-dark);}
+  .ox button.correct{border-color:var(--right);background:var(--right-soft);color:var(--right);}
+  .ox button.incorrect{border-color:var(--wrong);background:var(--wrong-soft);color:var(--wrong);}
+  .sa-input{width:100%;padding:13px 15px;border:1px solid var(--line);border-radius:11px;font-size:16px;font-family:inherit;color:var(--ink);background:#fff;}
+  .sa-input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-soft);}
+  .sa-input.correct{border-color:var(--right);background:var(--right-soft);} .sa-input.incorrect{border-color:var(--wrong);background:var(--wrong-soft);}
+  .result{margin-top:16px;display:none;}
+  .result.show{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(-3px);}to{opacity:1;transform:none;}}
+  .verdict{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;margin-bottom:10px;}
+  .verdict.ok{color:var(--right);} .verdict.no{color:var(--wrong);} .verdict .ic{font-size:19px;}
+  .ans-line{font-size:14.5px;margin:0 0 10px;} .ans-line .lab{font-weight:800;color:var(--teal-dark);}
+  .expl{background:#fafbf9;border:1px solid var(--line);border-left:3px solid var(--teal);border-radius:8px;padding:12px 14px;font-size:14.5px;color:#36433b;margin-bottom:10px;}
+  .expl .lab{font-weight:800;display:block;margin-bottom:3px;color:var(--teal-dark);}
+  .memo{background:var(--amber-soft);border:1px solid #efe1c2;border-left:3px solid var(--amber);border-radius:8px;padding:12px 14px;font-size:14.5px;color:#6e500f;}
+  .memo .lab{font-weight:800;display:block;margin-bottom:3px;color:var(--amber);}
+  .nav{display:flex;gap:10px;margin-top:18px;align-items:center;}
+  .prev{font-size:14px;font-weight:600;padding:11px 16px;border-radius:10px;background:#fff;border:1px solid var(--line);color:var(--muted);transition:.15s;}
+  .prev:hover:not(:disabled){border-color:var(--teal);color:var(--teal);}
+  .prev:disabled{opacity:.4;cursor:default;}
+  .primary{flex:1;font-size:15px;font-weight:700;padding:13px;border-radius:11px;background:var(--teal);color:#fff;transition:.15s;}
+  .primary:hover{background:var(--teal-dark);}
+  .summary{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:30px 24px;text-align:center;}
+  .score-big{font-size:46px;font-weight:800;color:var(--teal);line-height:1;margin:6px 0;}
+  .score-label{font-size:15px;color:var(--muted);font-weight:600;}
+  .ring{width:120px;height:120px;margin:8px auto 14px;position:relative;}
+  .ring svg{transform:rotate(-90deg);}
+  .ring .pct{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .ring .pct b{font-size:30px;font-weight:800;color:var(--teal);line-height:1;}
+  .ring .pct span{font-size:12px;color:var(--muted);}
+  .breakdown{display:flex;gap:10px;justify-content:center;margin:18px 0 6px;flex-wrap:wrap;}
+  .bd{background:#fafbf9;border:1px solid var(--line);border-radius:10px;padding:10px 16px;min-width:90px;}
+  .bd .t{font-size:12px;color:var(--muted);font-weight:600;} .bd .v{font-size:17px;font-weight:800;color:var(--ink);margin-top:2px;}
+  .summary-msg{font-size:15px;color:var(--ink);margin:16px 0 6px;font-weight:600;}
+  .sum-btns{display:flex;flex-direction:column;gap:9px;margin-top:20px;}
+  .sum-btns button{font-size:15px;font-weight:700;padding:13px;border-radius:11px;transition:.15s;}
+  .btn-wrong{background:var(--wrong);color:#fff;} .btn-wrong:hover{background:#a53a30;} .btn-wrong:disabled{opacity:.4;cursor:default;}
+  .btn-ghost{background:#fff;border:1px solid var(--line);color:var(--ink);} .btn-ghost:hover{border-color:var(--teal);color:var(--teal);}
+  footer{text-align:center;color:var(--muted);font-size:12.5px;margin-top:26px;}
+  @media(max-width:520px){h1{font-size:21px;} .q-text{font-size:16px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">통합사회 · Ⅴ. 생활공간과 사회</div>
+    <h1>5-2단원 · 교통·통신과 과학기술의 발달</h1>
+    <p class="sub">답을 고르거나 입력하고 <b>채점하기</b>를 누르면 정답·해설·암기 포인트가 나와요. 한 문제씩 풀고 <b>다음 문제 →</b>로 넘어가요.</p>
+  </header>
+  <div class="topbar" id="topbar">
+    <span class="pmeta"><b id="pNow">1</b> / <span id="pTotal">0</span></span>
+    <div class="progress"><i id="prog"></i></div>
+    <button class="shuffle" id="btnShuffle">🔀 순서 섞기</button>
+  </div>
+  <div id="stage"></div>
+  <footer>정지윤 내신 대비 · 교과서 본문 기반 자동 채점 퀴즈</footer>
+</div>
+
+<script>
+const DATA = [
+  // ===== 객관식 =====
+  {type:'mc', q:"다음 설명에 해당하는 현상은? “새로운 교통수단의 개통으로 주변 도시의 인구와 경제력이 대도시로 유입되는 현상”",
+   options:["빨대 효과","외래종","정보 격차","교외화","이촌 향도"], answer:0,
+   expl:"음료를 빨대로 빨아들이듯, 새 교통수단 개통으로 주변 도시의 인구·경제력이 대도시로 빨려 들어가는 것이 빨대 효과예요. 지역 격차를 더 키웁니다.",
+   memo:"빨대 효과 = 새 교통로 → 주변 도시 인구·경제력이 대도시로 유입 → 지역 격차↑"},
+
+  {type:'mc', q:"교통·통신의 발달에 따른 문제로 옳지 <u>않은</u> 것은?",
+   options:[
+     "교통 접근성에 따라 지역 격차가 확대된다.",
+     "빨대 효과로 지역 격차가 더욱 커지기도 한다.",
+     "녹지 감소·서식처 파괴로 로드킬이 증가한다.",
+     "외래종 유입으로 생태환경이 교란된다.",
+     "전염병의 확산 범위가 좁아지고 전파 속도가 느려진다."], answer:4,
+   expl:"국가 간 교류 증가로 전염병의 확산 범위는 ‘넓어지고’ 전파 속도는 ‘빨라졌어요’. ⑤는 반대입니다.",
+   memo:"교통·통신 문제 = 지역 격차·빨대 효과 / 생태환경(로드킬·외래종) / 전염병 확산 범위↑·속도↑"},
+
+  {type:'mc', q:"다음 설명에 해당하는 개념은? “자연환경이나 생활 습관 등으로 제한된 지역에서 정착하여 유행을 반복하는 질병”",
+   options:["풍토병","외래종","정보 격차","교란","로드킬"], answer:0,
+   expl:"말라리아·뎅기열처럼 특정 지역에서 반복 유행하는 질병이 풍토병이에요. 교류 증가로 국내에 유입되어 건강을 위협하기도 합니다.",
+   memo:"풍토병 = 특정 지역에서 유행 반복(말라리아·뎅기열)"},
+
+  {type:'mc', q:"다음 설명에 해당하는 개념은? “원래 서식지가 아닌 다른 지역에서 유입되어 서식하는 동식물”",
+   options:["외래종","풍토병","생태 통로","선박 평형수","로드킬"], answer:0,
+   expl:"다른 지역에서 들어와 서식하는 동식물이 외래종이에요. 가시박처럼 생태계를 교란하는 외래 교란종이 문제가 됩니다.",
+   memo:"외래종 = 다른 지역에서 유입된 동식물 (가시박=외래 교란종 사례)"},
+
+  {type:'mc', q:"교통·통신 발달에 따른 지역 격차를 줄이기 위한 방안으로 옳지 <u>않은</u> 것은?",
+   options:[
+     "교통이 불편한 지역에 역·터미널·공항·항만 등 교통 기반 시설을 설치한다.",
+     "대중교통을 활성화한다.",
+     "국가 차원의 균형 개발 정책으로 낙후 지역을 지원한다.",
+     "지역 특성에 맞는 산업 발굴이나 관광 산업을 육성한다.",
+     "대도시에 인구와 기능을 더욱 집중시킨다."], answer:4,
+   expl:"대도시에 인구·기능을 더 집중시키면 지역 격차가 더 커져요. 격차 해소를 위해서는 낙후 지역 지원과 교통 기반 시설 확충이 필요합니다.",
+   memo:"지역 격차 해결 = 교통 기반 시설·대중교통·균형 개발·지역 산업 육성"},
+
+  {type:'mc', q:"야생 동물의 찻길 사고를 방지하기 위해 만드는, 동물에게 이동 경로를 제공하는 시설은? (물고기를 위한 어도도 포함된다)",
+   options:["생태 통로","선박 평형수","환경 영향 평가","방음벽","외래종"], answer:0,
+   expl:"생태 통로는 야생 동물에게 이동 경로를 제공하고 천적·인간의 위협으로부터 피난처가 되며 생태계 연속성을 유지해 줘요. 물고기를 위한 어도도 생태 통로입니다.",
+   memo:"생태 통로 = 야생 동물 이동 경로(어도 포함) → 로드킬 방지·생태계 연속성"},
+
+  {type:'mc', q:"다음 설명에 해당하는 제도는? “계획이나 사업이 환경에 미치는 영향을 미리 조사·예측·평가하여 해로운 영향을 피하거나 줄일 방안을 마련하는 제도”",
+   options:["환경 영향 평가","검역","빨대 효과","사회 안전망","배리어 프리"], answer:0,
+   expl:"개발로 인한 생태환경 피해를 줄이기 위해 ‘미리’ 조사·예측·평가하는 제도가 환경 영향 평가예요.",
+   memo:"환경 영향 평가 = 사업 전 '미리' 환경 영향 조사·예측·평가"},
+
+  {type:'mc', q:"해양 생물의 이동으로 인한 외래종 유입을 막기 위해 처리 장치 설치를 의무화하는 대상은? (선박의 무게 중심을 유지하기 위해 채우는 바닷물)",
+   options:["선박 평형수","생태 통로","검역","환경 영향 평가","어도"], answer:0,
+   expl:"선박 평형수를 채우고 빼는 과정에서 해양 생물이 다른 지역으로 이동해요. 처리 장치를 설치하면 외래종 유입을 막을 수 있습니다.",
+   memo:"선박 평형수 처리 장치 = 해양 외래종 유입 차단"},
+
+  {type:'mc', q:"전염병과 풍토병이 국내로 유입되는 것을 막기 위해 출입국 과정에서 강화해야 하는 것은?",
+   options:["검역 관리","선박 평형수 처리","환경 영향 평가","생태 통로 설치","대중교통 활성화"], answer:0,
+   expl:"출입국 과정의 검역 관리를 강화해 전염병에 감염된 상태로 입·출국하는 사람을 통제해야 해요.",
+   memo:"전염병·풍토병 차단 = 출입국 '검역 관리' 강화"},
+
+  {type:'mc', q:"다음 설명에 해당하는 개념은? “장애인·고령층·저소득층·농어민 등 정보 소외 계층이 일반 국민에 비해 정보 통신 기술 접근 능력이 낮아 발생하는 사회적·경제적 격차”",
+   options:["정보 격차","노동 시장의 양극화","빨대 효과","풍토병","사이버 범죄"], answer:0,
+   expl:"정보화 혜택이 불균등하게 전개되며 계층 간·지역 간에 나타나는 격차가 정보 격차예요.",
+   memo:"정보 격차 = 정보 소외 계층(장애인·고령층·저소득층·농어민)의 정보 접근 능력 격차"},
+
+  {type:'mc', q:"과학기술의 발달에 따른 문제로 옳지 <u>않은</u> 것은?",
+   options:[
+     "정보화 혜택이 불균등하게 전개되어 정보 격차가 나타난다.",
+     "자동화로 인간 노동이 기계로 대체되어 일자리가 감소한다.",
+     "노동 시장의 양극화가 심각해진다.",
+     "가상 공간의 익명성을 이용한 사이버 범죄가 증가한다.",
+     "정보 기기에 저장된 개인 정보가 보호되어 사생활 침해가 사라진다."], answer:4,
+   expl:"CCTV·스마트폰 등에 저장된 개인 정보가 노출되어 오히려 사생활 침해 문제가 ‘발생’해요. ⑤는 반대입니다.",
+   memo:"과학기술 문제 = 정보 격차·노동 시장 양극화·사이버 범죄·사생활 침해"},
+
+  {type:'mc', q:"다음 설명에 해당하는 개념은? “노동 시장의 임금 체계, 근로 조건 등이 차이 나는 현상”",
+   options:["노동 시장의 양극화","정보 격차","빨대 효과","사회 안전망","정보화"], answer:0,
+   expl:"자동화로 기계 대체가 가능한 인력과 불가능한 인력 사이의 임금·고용 조건 격차가 커지는 것이 노동 시장의 양극화예요.",
+   memo:"노동 시장의 양극화 = 임금·근로 조건의 격차 심화 (자동화·로봇)"},
+
+  {type:'mc', q:"사이버 공간의 익명성에 대한 설명으로 옳지 <u>않은</u> 것은?",
+   options:[
+     "표현의 자유를 극대화하는 장점이 있다.",
+     "악의적 행동을 하게 하는 원인이 되기도 한다.",
+     "사이버 폭력·사이버 금융 범죄의 원인이 되기도 한다.",
+     "타인의 인권을 침해하지 않는 범위 내에서 누려야 한다.",
+     "익명성을 이용한 표현은 어떤 경우에도 무제한 허용되어야 한다."], answer:4,
+   expl:"익명성은 타인의 인권을 침해하지 않고 사회 질서를 훼손하지 않는 범위 내에서 누려야 해요. 무제한 허용은 옳지 않습니다.",
+   memo:"사이버 익명성 = 장점(표현의 자유) / 단점(악의적 행동) → '인권·질서 침해 안 하는 범위'에서만"},
+
+  {type:'mc', q:"과학기술의 발달에 따른 문제의 해결 방안으로 옳지 <u>않은</u> 것은?",
+   options:[
+     "정보 취약 계층에 정보 기기·소프트웨어를 제공하고 정보 교육을 운영한다.",
+     "제4차 산업 혁명 관련 기술 교육을 강화하고 취업 정보를 제공한다.",
+     "플랫폼 노동자·저임금 근로자의 권익 보호를 위한 제도적 장치를 마련한다.",
+     "사이버 범죄·사생활 침해 예방을 위해 법적·제도적 규제를 강화한다.",
+     "정보 통신 윤리 교육을 폐지하고 개인의 자율에만 맡긴다."], answer:4,
+   expl:"정보 통신 윤리 교육은 ‘지속적으로 실시’해야 해요. 폐지는 사이버 범죄·사생활 침해 예방에 어긋납니다.",
+   memo:"해결 방안 = 정보 기기·교육 제공 / 기술 교육·취업 / 노동자 권익 보호 / 규제 강화 / 윤리 교육 지속"},
+
+  {type:'mc', q:"다음 설명에 해당하는 노동자는? “애플리케이션과 같은 디지털 플랫폼을 이용하여 노동을 제공하고 보수를 받는 노동자” (예: 배달원)",
+   options:["플랫폼 노동자","생산 연령 인구","정보 취약 계층","사회 안전망","외국 국적 동포"], answer:0,
+   expl:"디지털 플랫폼을 통해 일하는 새로운 유형의 노동자가 플랫폼 노동자예요. 권익 보호를 위한 제도적 장치가 필요합니다.",
+   memo:"플랫폼 노동자 = 디지털 플랫폼으로 노동 제공(배달원 등)"},
+
+  {type:'mc', q:"다음 설명에 해당하는 개념은? “모든 국민을 실업·빈곤·재해·노령·질병 등 사회적 위험으로부터 보호하기 위한 제도적 장치”",
+   options:["사회 안전망","정보 격차","빨대 효과","노동 시장의 양극화","배리어 프리"], answer:0,
+   expl:"사회 보험·공공 부조에 공공 근로 사업·취업 훈련 등을 포괄하는 제도적 장치가 사회 안전망이에요.",
+   memo:"사회 안전망 = 실업·빈곤·재해·노령·질병 등 사회적 위험으로부터 보호"},
+
+  {type:'mc', q:"다음 설명에 해당하는 개념은? “고령자나 장애인이 일상생활을 함에 있어 물리적 장벽이 없는 환경”",
+   options:["배리어 프리","사회 안전망","정보 격차","생태 통로","검역"], answer:0,
+   expl:"배리어 프리는 ‘장벽이 없는’ 환경을 뜻해요. 배리어 프리 무인 단말기는 정보 격차 해결에 도움을 줍니다.",
+   memo:"배리어 프리 = 고령자·장애인에게 '물리적 장벽 없는' 환경"},
+
+  {type:'mc', q:"교통·통신 및 과학기술의 발달로 나타난 변화로 옳지 <u>않은</u> 것은?",
+   options:[
+     "인간이 공간을 인식하는 범위와 생활권이 확대되었다.",
+     "쌍방향 소통이 활성화되었다.",
+     "삶의 공간이 가상 공간까지 확장되었다.",
+     "지역 간 이동 시간이 단축되었다.",
+     "인간이 공간을 인식하는 범위와 생활권이 감소하였다."], answer:4,
+   expl:"교통·통신 발달로 공간 인식 범위와 생활권은 ‘확대’되었어요. ⑤는 반대입니다(①과 모순).",
+   memo:"발달의 변화 = 생활권 '확대'·쌍방향 소통·가상 공간 확장·이동 시간 단축"},
+
+  // ===== 단답형 (핵심 개념) =====
+  {type:'sa', q:"새로운 교통수단의 개통으로 주변 도시의 인구와 경제력이 대도시로 유입되는 현상을 [   ]라고 한다.",
+   answers:["빨대효과","빨대 효과"], shown:"빨대 효과",
+   expl:"지역 격차를 더욱 키우는 현상으로, 교통 발달의 부정적 영향이에요.",
+   memo:"빨대 효과 = 주변 도시 인구·경제력이 대도시로 유입"},
+
+  {type:'sa', q:"원래 서식지가 아닌 다른 지역에서 유입되어 서식하는 동식물을 [   ]이라고 한다.",
+   answers:["외래종"], shown:"외래종",
+   expl:"가시박처럼 생태계를 교란하는 외래 교란종이 대표적인 문제예요.",
+   memo:"외래종 = 다른 지역에서 유입된 동식물"},
+
+  {type:'sa', q:"자연환경이나 생활 습관 등으로 제한된 지역에서 정착하여 유행을 반복하는 질병을 [   ]이라고 한다.",
+   answers:["풍토병"], shown:"풍토병",
+   expl:"말라리아·뎅기열 등이 풍토병의 예로, 교류 증가로 국내에 유입되기도 해요.",
+   memo:"풍토병 = 특정 지역에서 유행 반복(말라리아·뎅기열)"},
+
+  {type:'sa', q:"야생 동물에게 이동 경로를 제공하는 시설로, 물고기를 위한 어도도 포함되는 것을 [   ]라고 한다.",
+   answers:["생태통로","생태 통로"], shown:"생태 통로",
+   expl:"로드킬을 방지하고 생태계의 연속성을 유지해 주는 시설이에요.",
+   memo:"생태 통로 = 야생 동물 이동 경로(어도 포함)"},
+
+  {type:'sa', q:"계획이나 사업이 환경에 미치는 영향을 미리 조사·예측·평가하는 제도를 [   ]라고 한다.",
+   answers:["환경영향평가","환경 영향 평가"], shown:"환경 영향 평가",
+   expl:"개발로 인한 환경 피해를 사전에 줄이기 위한 제도예요.",
+   memo:"환경 영향 평가 = 사업 전 환경 영향 '미리' 평가"},
+
+  {type:'sa', q:"전염병·풍토병의 유입을 막기 위해 출입국 과정에서 강화하는 것을 [   ] 관리라고 한다.",
+   answers:["검역"], shown:"검역 (관리)",
+   expl:"감염 상태로 입·출국하는 사람을 통제하기 위한 관리예요.",
+   memo:"검역 = 출입국 과정에서 전염병 차단"},
+
+  {type:'sa', q:"정보 소외 계층이 일반 국민에 비해 정보 통신 기술 접근 능력이 낮아 발생하는 사회적·경제적 격차를 [   ]라고 한다.",
+   answers:["정보격차","정보 격차"], shown:"정보 격차",
+   expl:"장애인·고령층·저소득층·농어민 등 정보 취약 계층에게 나타나는 문제예요.",
+   memo:"정보 격차 = 정보 소외 계층의 정보 접근 능력 격차"},
+
+  {type:'sa', q:"노동 시장의 임금 체계, 근로 조건 등이 차이 나는 현상을 [   ]라고 한다.",
+   answers:["노동시장의양극화","노동 시장의 양극화","노동시장양극화","양극화"], shown:"노동 시장의 양극화",
+   expl:"자동화·로봇 도입으로 기계 대체 가능/불가능 인력 사이의 격차가 커지면서 심각해져요.",
+   memo:"노동 시장의 양극화 = 임금·근로 조건 격차 심화"},
+
+  {type:'sa', q:"모든 국민을 실업·빈곤·재해·노령·질병 등 사회적 위험으로부터 보호하기 위한 제도적 장치를 [   ]이라고 한다.",
+   answers:["사회안전망","사회 안전망"], shown:"사회 안전망",
+   expl:"사회 보험·공공 부조에 공공 근로 사업·취업 훈련 등을 포괄하는 개념이에요.",
+   memo:"사회 안전망 = 사회적 위험으로부터 국민 보호"},
+
+  {type:'sa', q:"애플리케이션과 같은 디지털 플랫폼을 이용하여 노동을 제공하고 보수를 받는 노동자를 [   ]라고 한다.",
+   answers:["플랫폼노동자","플랫폼 노동자","플렛폼노동자"], shown:"플랫폼 노동자",
+   expl:"배달원 등이 대표적이며, 권익 보호를 위한 제도적 장치가 필요해요.",
+   memo:"플랫폼 노동자 = 디지털 플랫폼으로 노동 제공"},
+
+  {type:'sa', q:"고령자나 장애인이 일상생활을 함에 있어 물리적 장벽이 없는 환경을 [   ]라고 한다.",
+   answers:["배리어프리","배리어 프리","barrierfree"], shown:"배리어 프리",
+   expl:"배리어 프리 무인 단말기처럼 정보 격차 해결에 도움이 되는 환경이에요.",
+   memo:"배리어 프리 = 물리적 장벽 없는 환경"},
+
+  // ===== O/X =====
+  {type:'ox', q:"빨대 효과는 새로운 교통수단 개통으로 주변 도시 인구·경제력이 대도시로 유입되는 현상이다.", answer:'O',
+   expl:"맞아요. 빨대로 빨아들이듯 주변 도시의 인구·경제력이 대도시로 흡수되는 현상입니다.",
+   memo:"빨대 효과 = 주변 도시 → 대도시로 인구·경제력 유입"},
+
+  {type:'ox', q:"교통·통신의 발달은 지역 격차를 줄여 모든 지역의 경제를 고르게 발전시킨다.", answer:'X',
+   expl:"틀려요. 교통 접근성에 따라 지역 격차가 ‘확대’되며, 빨대 효과로 더 커지기도 해요.",
+   memo:"교통·통신 발달 → 지역 격차 '확대'(축소 아님)"},
+
+  {type:'ox', q:"국가 간 교류 증가로 전염병의 확산 범위가 넓어지고 전파 속도가 빨라졌다.", answer:'O',
+   expl:"맞아요. 코로나바이러스 감염증-19처럼 짧은 기간에 많은 국가로 퍼지는 사례가 늘었어요.",
+   memo:"교류 증가 → 전염병 확산 범위↑·속도↑"},
+
+  {type:'ox', q:"말라리아·뎅기열 같은 풍토병이 국내로 유입되어 건강을 위협하기도 한다.", answer:'O',
+   expl:"맞아요. 다른 지역의 풍토병이 교류 과정에서 국내로 들어오기도 합니다.",
+   memo:"풍토병(말라리아·뎅기열) 국내 유입 가능"},
+
+  {type:'ox', q:"생태 통로는 야생 동물에게 이동 경로를 제공하며, 물고기를 위한 어도도 포함된다.", answer:'O',
+   expl:"맞아요. 생태 통로는 로드킬을 막고 생태계 연속성을 유지하며, 어도도 생태 통로에 해당합니다.",
+   memo:"생태 통로 = 동물 이동 경로 + 어도 포함"},
+
+  {type:'ox', q:"선박 평형수 처리 장치 설치는 외래종 유입을 막기 위한 방안이다.", answer:'O',
+   expl:"맞아요. 평형수를 채우고 빼는 과정에서 해양 생물이 이동하므로 처리 장치로 외래종 유입을 막습니다.",
+   memo:"선박 평형수 처리 = 해양 외래종 차단"},
+
+  {type:'ox', q:"환경 영향 평가는 사업이 환경에 미치는 영향을 사업이 끝난 뒤에 평가하는 제도이다.", answer:'X',
+   expl:"틀려요. 환경 영향 평가는 사업 ‘전에 미리’ 조사·예측·평가하는 제도예요.",
+   memo:"환경 영향 평가 = 사업 전 '미리' 평가(사후 아님)"},
+
+  {type:'ox', q:"정보 격차는 정보 소외 계층의 정보 접근 능력이 낮아 생기는 사회적·경제적 격차이다.", answer:'O',
+   expl:"맞아요. 장애인·고령층·저소득층·농어민 등에게 나타나는 격차입니다.",
+   memo:"정보 격차 = 정보 소외 계층의 접근 능력 차이"},
+
+  {type:'ox', q:"자동화 시스템 도입으로 노동 시장의 양극화가 심각해질 수 있다.", answer:'O',
+   expl:"맞아요. 기계 대체 가능/불가능 인력 사이의 임금·고용 조건 격차가 커지기 때문이에요.",
+   memo:"자동화 → 노동 시장 양극화↑"},
+
+  {type:'ox', q:"사이버 공간의 익명성은 어떤 경우에도 무제한 허용되어야 한다.", answer:'X',
+   expl:"틀려요. 익명성은 타인의 인권을 침해하지 않고 사회 질서를 훼손하지 않는 범위 내에서 누려야 해요.",
+   memo:"사이버 익명성 = '인권·질서 침해 안 하는 범위'에서만"},
+
+  {type:'ox', q:"정보 격차 해결을 위해 정보 취약 계층에 정보 기기와 교육을 제공해야 한다.", answer:'O',
+   expl:"맞아요. 정보 기기·소프트웨어 제공과 맞춤형 정보 교육 프로그램 운영이 필요합니다.",
+   memo:"정보 격차 해결 = 정보 기기·교육 제공"},
+
+  {type:'ox', q:"사이버 범죄·사생활 침해 예방을 위해 정보 통신 윤리 교육을 지속해야 한다.", answer:'O',
+   expl:"맞아요. 법적·제도적 규제 강화와 함께 정보 통신 윤리 교육을 지속적으로 실시해야 해요.",
+   memo:"사이버 범죄 예방 = 규제 강화 + 정보 통신 윤리 교육 지속"},
+
+  {type:'ox', q:"플랫폼 노동자는 디지털 플랫폼을 이용해 노동을 제공하고 보수를 받는 노동자이다.", answer:'O',
+   expl:"맞아요. 배달원이 대표적이며, 새로운 유형의 노동자로 권익 보호가 필요합니다.",
+   memo:"플랫폼 노동자 = 디지털 플랫폼으로 노동 제공"},
+
+  {type:'ox', q:"교통·통신의 발달로 인간이 공간을 인식하는 범위와 생활권이 감소하였다.", answer:'X',
+   expl:"틀려요. 교통·통신의 발달로 공간 인식 범위와 생활권은 ‘확대’되었어요.",
+   memo:"교통·통신 발달 → 생활권 '확대'(감소 아님)"},
+
+  {type:'ox', q:"우리나라 정보 격차 현황에서 정보 취약 계층 중 고령층의 정보화 수준이 가장 낮게 나타난다.", answer:'O',
+   expl:"맞아요. 고령층은 접근·역량·활용 분야 모두에서 가장 낮게 나타납니다. (저소득층은 일반 국민과 큰 차이 없음)",
+   memo:"정보화 수준 가장 낮음 = 고령층"}
+];
+
+const MARKS=['①','②','③','④','⑤'];
+let order = DATA.map((_,i)=>i);
+let pos = 0;
+const state = {};
+function norm(s){return (s||'').toString().trim().toLowerCase().replace(/\s+/g,'').replace(/[().,·「」]/g,'');}
+function st(idx){ return state[idx] || (state[idx]={picked:null,graded:false,correct:false}); }
+function updateTop(){
+  document.getElementById('pNow').textContent=Math.min(pos+1,order.length);
+  document.getElementById('pTotal').textContent=order.length;
+  document.getElementById('prog').style.width=((pos)/order.length*100)+'%';
+}
+function renderQuestion(){
+  updateTop();
+  const idx=order[pos]; const item=DATA[idx]; const s=st(idx);
+  const stage=document.getElementById('stage');
+  const tagMap={mc:['mc','객관식'],sa:['sa','단답형'],ox:['ox','O / X']};
+  const [tagCls,tagTxt]=tagMap[item.type];
+  let qhtml=item.q.replace(/\[\s*\]/g,'<span class="blank">　　</span>');
+  let body='';
+  if(item.type==='mc'){
+    body='<div class="opts">'+item.options.map((o,i)=>`<div class="opt" data-i="${i}"><span class="mk">${MARKS[i]}</span><span>${o}</span></div>`).join('')+'</div>';
+  }else if(item.type==='ox'){
+    body='<div class="ox"><button data-v="O">O</button><button data-v="X">X</button></div>';
+  }else{
+    body='<input class="sa-input" type="text" placeholder="정답을 입력하세요" autocomplete="off">';
+  }
+  const lastQ=(pos===order.length-1);
+  stage.innerHTML=`
+    <div class="q">
+      <div class="q-head"><span class="num">${pos+1}</span><span class="tag ${tagCls}">${tagTxt}</span></div>
+      <p class="q-text">${qhtml}</p>
+      ${body}
+      <div class="result"></div>
+      <div class="nav">
+        <button class="prev" id="btnPrev" ${pos===0?'disabled':''}>← 이전</button>
+        <button class="primary" id="btnPrimary">채점하기</button>
+      </div>
+    </div>`;
+  const card=stage.querySelector('.q');
+  if(item.type==='mc'){
+    card.querySelectorAll('.opt').forEach(el=>{
+      const i=+el.dataset.i;
+      if(s.picked===i) el.classList.add('sel');
+      el.addEventListener('click',()=>{ if(s.graded) return; card.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel')); el.classList.add('sel'); s.picked=i; });
+    });
+  }else if(item.type==='ox'){
+    card.querySelectorAll('.ox button').forEach(el=>{
+      if(s.picked===el.dataset.v) el.classList.add('sel');
+      el.addEventListener('click',()=>{ if(s.graded) return; card.querySelectorAll('.ox button').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); s.picked=el.dataset.v; });
+    });
+  }else{
+    const inp=card.querySelector('.sa-input');
+    if(s.picked!=null) inp.value=s.picked;
+    inp.addEventListener('input',()=>{ s.picked=inp.value; });
+    inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault(); document.getElementById('btnPrimary').click();}});
+    if(!s.graded) setTimeout(()=>inp.focus(),50);
+  }
+  document.getElementById('btnPrev').addEventListener('click',()=>{ if(pos>0){pos--; renderQuestion();} });
+  const primary=document.getElementById('btnPrimary');
+  if(s.graded){
+    showGraded(card,idx);
+    primary.textContent=lastQ?'결과 보기 →':'다음 문제 →';
+    primary.onclick=()=>goNext(lastQ);
+  }else{
+    primary.textContent='채점하기';
+    primary.onclick=()=>{ if(gradeCurrent(card,idx)){ primary.textContent=lastQ?'결과 보기 →':'다음 문제 →'; primary.onclick=()=>goNext(lastQ); } };
+  }
+}
+function gradeCurrent(card,idx){
+  const item=DATA[idx]; const s=st(idx);
+  if(s.picked==null || (item.type==='sa' && !norm(s.picked))){
+    const inp=card.querySelector('.sa-input'); if(inp) inp.focus();
+    card.querySelector('#btnPrimary').animate([{transform:'translateX(0)'},{transform:'translateX(-4px)'},{transform:'translateX(4px)'},{transform:'translateX(0)'}],{duration:220});
+    return false;
+  }
+  if(item.type==='mc') s.correct=(+s.picked===item.answer);
+  else if(item.type==='ox') s.correct=(s.picked===item.answer);
+  else s.correct=item.answers.some(a=>norm(a)===norm(s.picked));
+  s.graded=true; showGraded(card,idx); return true;
+}
+function showGraded(card,idx){
+  const item=DATA[idx]; const s=st(idx);
+  if(item.type==='mc'){
+    card.querySelectorAll('.opt').forEach(el=>{ el.style.cursor='default'; const i=+el.dataset.i; if(i===item.answer) el.classList.add('correct'); if(i===+s.picked && !s.correct) el.classList.add('incorrect'); });
+  }else if(item.type==='ox'){
+    card.querySelectorAll('.ox button').forEach(el=>{ el.style.cursor='default'; if(el.dataset.v===item.answer) el.classList.add('correct'); if(el.dataset.v===s.picked && !s.correct) el.classList.add('incorrect'); });
+  }else{
+    const inp=card.querySelector('.sa-input'); inp.readOnly=true; inp.classList.add(s.correct?'correct':'incorrect');
+  }
+  const ansShown = item.type==='mc'?MARKS[item.answer]+' '+item.options[item.answer] : item.type==='ox'?item.answer : item.shown;
+  const res=card.querySelector('.result');
+  res.innerHTML=`
+    <div class="verdict ${s.correct?'ok':'no'}"><span class="ic">${s.correct?'⭕':'❌'}</span>${s.correct?'정답이에요!':'오답이에요'}</div>
+    <p class="ans-line"><span class="lab">정답</span> · ${ansShown}</p>
+    <div class="expl"><span class="lab">해설</span>${item.expl}</div>
+    <div class="memo"><span class="lab">📌 암기 포인트</span>${item.memo}</div>`;
+  res.classList.add('show');
+}
+function goNext(lastQ){ if(lastQ){ showSummary(); } else { pos++; renderQuestion(); window.scrollTo({top:0,behavior:'smooth'}); } }
+function showSummary(){
+  document.getElementById('prog').style.width='100%';
+  document.getElementById('pNow').textContent=order.length;
+  const graded=order.filter(i=>state[i]&&state[i].graded);
+  const correct=graded.filter(i=>state[i].correct).length;
+  const total=order.length; const pct=Math.round(correct/total*100);
+  const wrong=order.filter(i=>state[i]&&state[i].graded&&!state[i].correct);
+  const types={mc:'객관식',sa:'단답형',ox:'O / X'};
+  const bd=Object.keys(types).map(t=>{
+    const tot=order.filter(i=>DATA[i].type===t).length; if(tot===0) return '';
+    const cor=order.filter(i=>DATA[i].type===t && state[i]&&state[i].correct).length;
+    return `<div class="bd"><div class="t">${types[t]}</div><div class="v">${cor} / ${tot}</div></div>`;
+  }).join('');
+  let msg;
+  if(pct===100) msg='완벽해요! 다 맞혔어요 🎉';
+  else if(pct>=80) msg='잘했어요! 거의 다 외웠네요 👍';
+  else if(pct>=60) msg='절반 넘게 맞혔어요. 틀린 것만 다시 보면 돼요.';
+  else msg='틀린 문제 위주로 한 번 더 풀어 봐요. 금방 늘어요!';
+  const C=2*Math.PI*52;
+  document.getElementById('stage').innerHTML=`
+    <div class="summary">
+      <div class="ring">
+        <svg width="120" height="120">
+          <circle cx="60" cy="60" r="52" fill="none" stroke="#e3e8e0" stroke-width="12"/>
+          <circle cx="60" cy="60" r="52" fill="none" stroke="#2f7d5b" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct/100)}"/>
+        </svg>
+        <div class="pct"><b>${pct}%</b><span>정답률</span></div>
+      </div>
+      <div class="score-label">맞힌 문제</div>
+      <div class="score-big">${correct} <span style="font-size:24px;color:var(--muted);font-weight:700;">/ ${total}</span></div>
+      <div class="breakdown">${bd}</div>
+      <div class="summary-msg">${msg}</div>
+      <div class="sum-btns">
+        <button class="btn-wrong" id="sWrong" ${wrong.length===0?'disabled':''}>✏️ 오답만 다시 풀기 (${wrong.length}문제)</button>
+        <button class="btn-ghost" id="sRetry">↺ 전체 다시 풀기</button>
+        <button class="btn-ghost" id="sShuffle">🔀 순서 섞어서 다시</button>
+      </div>
+    </div>`;
+  document.getElementById('sWrong').addEventListener('click',()=>{ if(wrong.length===0) return; wrong.forEach(i=>state[i]={picked:null,graded:false,correct:false}); order=wrong.slice(); pos=0; renderQuestion(); window.scrollTo({top:0,behavior:'smooth'}); });
+  document.getElementById('sRetry').addEventListener('click',()=>resetAll(false));
+  document.getElementById('sShuffle').addEventListener('click',()=>resetAll(true));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function resetAll(shuffle){
+  for(const k in state) delete state[k];
+  order=DATA.map((_,i)=>i);
+  if(shuffle) for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
+  pos=0; renderQuestion(); window.scrollTo({top:0,behavior:'smooth'});
+}
+document.getElementById('btnShuffle').addEventListener('click',function(){ if(!confirm('순서를 섞고 처음부터 다시 풀까요? (현재 진행 기록은 지워져요)')) return; resetAll(true); });
+renderQuestion();
+</script>
+</body>
+</html>

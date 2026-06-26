@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>통합사회 5-3단원 · 우리 지역의 공간 변화 퀴즈</title>
+<style>
+  :root{
+    --bg:#f5f7f3; --card:#ffffff; --ink:#1f2a24; --muted:#6b7a70; --line:#e3e8e0;
+    --teal:#2f7d5b; --teal-dark:#205c42; --teal-soft:#e7f1ea;
+    --right:#2f7d5b; --right-soft:#e7f3ec; --wrong:#c0473b; --wrong-soft:#fbeceb;
+    --amber:#9a6b15; --amber-soft:#fbf3e2;
+    --tag-mc:#3a6ea5; --tag-sa:#7a5aa6; --tag-ox:#b07a2a;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:680px;margin:0 auto;padding:0 18px 60px;}
+  header{padding:30px 0 16px;}
+  .eyebrow{font-size:13px;letter-spacing:.04em;color:var(--teal);font-weight:700;margin-bottom:6px;}
+  h1{font-size:24px;line-height:1.3;margin:0 0 6px;font-weight:800;letter-spacing:-.01em;}
+  .sub{color:var(--muted);font-size:14px;margin:0;}
+  .topbar{display:flex;align-items:center;gap:12px;margin:6px 0 18px;}
+  .pmeta{font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap;}
+  .pmeta b{color:var(--teal);}
+  .progress{flex:1;height:8px;background:var(--line);border-radius:99px;overflow:hidden;}
+  .progress > i{display:block;height:100%;width:0;background:var(--teal);transition:width .3s ease;border-radius:99px;}
+  .shuffle{font-size:12.5px;font-weight:600;padding:7px 12px;border-radius:8px;cursor:pointer;background:#fff;border:1px solid var(--line);color:var(--ink);transition:.15s;white-space:nowrap;}
+  .shuffle:hover{border-color:var(--teal);color:var(--teal);}
+  button{font-family:inherit;cursor:pointer;border:none;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 22px 20px;}
+  .q-head{display:flex;align-items:center;gap:9px;margin-bottom:14px;flex-wrap:wrap;}
+  .num{font-size:13px;font-weight:800;color:#fff;background:var(--teal-dark);min-width:30px;height:26px;padding:0 8px;border-radius:7px;display:flex;align-items:center;justify-content:center;}
+  .tag{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:99px;}
+  .tag.mc{color:var(--tag-mc);background:#eaf1f8;} .tag.sa{color:var(--tag-sa);background:#f2ecf8;} .tag.ox{color:var(--tag-ox);background:#f8f0e2;}
+  .q-text{font-size:17px;font-weight:600;margin:0 0 16px;letter-spacing:-.01em;line-height:1.55;}
+  .q-text .blank{color:var(--teal);font-weight:800;border-bottom:2px solid var(--teal);padding:0 16px;}
+  .opts{display:flex;flex-direction:column;gap:9px;}
+  .opt{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border:1px solid var(--line);border-radius:11px;background:#fff;cursor:pointer;transition:.13s;font-size:15px;}
+  .opt:hover{border-color:var(--teal);background:var(--teal-soft);}
+  .opt.sel{border-color:var(--teal);background:var(--teal-soft);}
+  .opt .mk{font-weight:800;color:var(--muted);flex-shrink:0;}
+  .opt.sel .mk{color:var(--teal);}
+  .opt.correct{border-color:var(--right);background:var(--right-soft);} .opt.correct .mk{color:var(--right);}
+  .opt.incorrect{border-color:var(--wrong);background:var(--wrong-soft);} .opt.incorrect .mk{color:var(--wrong);}
+  .ox{display:flex;gap:10px;}
+  .ox button{flex:1;padding:16px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:19px;font-weight:800;color:var(--ink);transition:.13s;}
+  .ox button:hover{border-color:var(--teal);background:var(--teal-soft);}
+  .ox button.sel{border-color:var(--teal);background:var(--teal-soft);color:var(--teal-dark);}
+  .ox button.correct{border-color:var(--right);background:var(--right-soft);color:var(--right);}
+  .ox button.incorrect{border-color:var(--wrong);background:var(--wrong-soft);color:var(--wrong);}
+  .sa-input{width:100%;padding:13px 15px;border:1px solid var(--line);border-radius:11px;font-size:16px;font-family:inherit;color:var(--ink);background:#fff;}
+  .sa-input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-soft);}
+  .sa-input.correct{border-color:var(--right);background:var(--right-soft);} .sa-input.incorrect{border-color:var(--wrong);background:var(--wrong-soft);}
+  .result{margin-top:16px;display:none;}
+  .result.show{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(-3px);}to{opacity:1;transform:none;}}
+  .verdict{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;margin-bottom:10px;}
+  .verdict.ok{color:var(--right);} .verdict.no{color:var(--wrong);} .verdict .ic{font-size:19px;}
+  .ans-line{font-size:14.5px;margin:0 0 10px;} .ans-line .lab{font-weight:800;color:var(--teal-dark);}
+  .expl{background:#fafbf9;border:1px solid var(--line);border-left:3px solid var(--teal);border-radius:8px;padding:12px 14px;font-size:14.5px;color:#36433b;margin-bottom:10px;}
+  .expl .lab{font-weight:800;display:block;margin-bottom:3px;color:var(--teal-dark);}
+  .memo{background:var(--amber-soft);border:1px solid #efe1c2;border-left:3px solid var(--amber);border-radius:8px;padding:12px 14px;font-size:14.5px;color:#6e500f;}
+  .memo .lab{font-weight:800;display:block;margin-bottom:3px;color:var(--amber);}
+  .nav{display:flex;gap:10px;margin-top:18px;align-items:center;}
+  .prev{font-size:14px;font-weight:600;padding:11px 16px;border-radius:10px;background:#fff;border:1px solid var(--line);color:var(--muted);transition:.15s;}
+  .prev:hover:not(:disabled){border-color:var(--teal);color:var(--teal);}
+  .prev:disabled{opacity:.4;cursor:default;}
+  .primary{flex:1;font-size:15px;font-weight:700;padding:13px;border-radius:11px;background:var(--teal);color:#fff;transition:.15s;}
+  .primary:hover{background:var(--teal-dark);}
+  .summary{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:30px 24px;text-align:center;}
+  .score-big{font-size:46px;font-weight:800;color:var(--teal);line-height:1;margin:6px 0;}
+  .score-label{font-size:15px;color:var(--muted);font-weight:600;}
+  .ring{width:120px;height:120px;margin:8px auto 14px;position:relative;}
+  .ring svg{transform:rotate(-90deg);}
+  .ring .pct{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .ring .pct b{font-size:30px;font-weight:800;color:var(--teal);line-height:1;}
+  .ring .pct span{font-size:12px;color:var(--muted);}
+  .breakdown{display:flex;gap:10px;justify-content:center;margin:18px 0 6px;flex-wrap:wrap;}
+  .bd{background:#fafbf9;border:1px solid var(--line);border-radius:10px;padding:10px 16px;min-width:90px;}
+  .bd .t{font-size:12px;color:var(--muted);font-weight:600;} .bd .v{font-size:17px;font-weight:800;color:var(--ink);margin-top:2px;}
+  .summary-msg{font-size:15px;color:var(--ink);margin:16px 0 6px;font-weight:600;}
+  .sum-btns{display:flex;flex-direction:column;gap:9px;margin-top:20px;}
+  .sum-btns button{font-size:15px;font-weight:700;padding:13px;border-radius:11px;transition:.15s;}
+  .btn-wrong{background:var(--wrong);color:#fff;} .btn-wrong:hover{background:#a53a30;} .btn-wrong:disabled{opacity:.4;cursor:default;}
+  .btn-ghost{background:#fff;border:1px solid var(--line);color:var(--ink);} .btn-ghost:hover{border-color:var(--teal);color:var(--teal);}
+  footer{text-align:center;color:var(--muted);font-size:12.5px;margin-top:26px;}
+  @media(max-width:520px){h1{font-size:21px;} .q-text{font-size:16px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">통합사회 · Ⅴ. 생활공간과 사회</div>
+    <h1>5-3단원 · 우리 지역의 공간 변화</h1>
+    <p class="sub">답을 고르거나 입력하고 <b>채점하기</b>를 누르면 정답·해설·암기 포인트가 나와요. 한 문제씩 풀고 <b>다음 문제 →</b>로 넘어가요.</p>
+  </header>
+  <div class="topbar" id="topbar">
+    <span class="pmeta"><b id="pNow">1</b> / <span id="pTotal">0</span></span>
+    <div class="progress"><i id="prog"></i></div>
+    <button class="shuffle" id="btnShuffle">🔀 순서 섞기</button>
+  </div>
+  <div id="stage"></div>
+  <footer>정지윤 내신 대비 · 교과서 본문 기반 자동 채점 퀴즈</footer>
+</div>
+
+<script>
+const DATA = [
+  // ===== 객관식 =====
+  {type:'mc', q:"지역 조사의 일반적인 과정 순서로 옳은 것은?",
+   options:[
+     "지역 조사 계획 수립 → 지역 정보의 수집 → 지역 정보 분석 및 정리 → 조사 보고서 작성",
+     "지역 정보의 수집 → 지역 조사 계획 수립 → 조사 보고서 작성 → 지역 정보 분석 및 정리",
+     "조사 보고서 작성 → 지역 정보의 수집 → 지역 조사 계획 수립 → 지역 정보 분석 및 정리",
+     "지역 조사 계획 수립 → 조사 보고서 작성 → 지역 정보의 수집 → 지역 정보 분석 및 정리",
+     "지역 정보 분석 및 정리 → 지역 정보의 수집 → 지역 조사 계획 수립 → 조사 보고서 작성"], answer:0,
+   expl:"지역 조사는 ‘계획 수립 → 정보 수집 → 정보 분석·정리 → 보고서 작성’ 순으로 진행돼요.",
+   memo:"지역 조사 4단계 = 계획 수립 → 정보 수집 → 분석·정리 → 보고서 작성"},
+
+  {type:'mc', q:"실내 조사에 대한 설명으로 옳은 것은?",
+   options:[
+     "문헌·지도·사진 등의 정보를 수집하고 현장 답사 계획을 수립하는 단계이다.",
+     "현장에 나가 지역 주민과 면담하는 과정이다.",
+     "설문 조사·실측 등으로 새로운 정보를 얻는 과정이다.",
+     "반드시 야외 조사보다 나중에 이루어진다.",
+     "지역 주민을 직접 만나 정보를 확인하는 과정이다."], answer:0,
+   expl:"실내 조사는 문헌·지도·사진 등을 수집하고 현장 답사 계획을 세우는 단계예요(②③⑤는 야외 조사).",
+   memo:"실내 조사 = 문헌·지도·사진 수집 + 현장 답사 '계획' 수립"},
+
+  {type:'mc', q:"야외 조사에 해당하는 활동으로 옳지 <u>않은</u> 것은?",
+   options:["지역 주민 면담","설문 조사","실측","현장 답사","문헌 조사"], answer:4,
+   expl:"문헌 조사는 실내 조사에 해당해요. 야외 조사는 현장에 나가 면담·설문·실측 등으로 정보를 얻는 과정입니다.",
+   memo:"야외 조사 = 주민 면담·설문·실측·현장 답사 / 문헌 조사는 실내 조사"},
+
+  {type:'mc', q:"조사 방법의 구분이 옳지 <u>않은</u> 것은?",
+   options:[
+     "문헌 조사 — 실내 조사",
+     "과거 사진 자료 수집 — 실내 조사",
+     "현장 답사 계획 수립 — 실내 조사",
+     "설문 조사 — 야외 조사",
+     "주민 면담 — 실내 조사"], answer:4,
+   expl:"주민 면담은 현장에서 이루어지는 ‘야외 조사’예요.",
+   memo:"실내=문헌·사진 수집·답사 계획 / 야외=주민 면담·설문·실측"},
+
+  {type:'mc', q:"실내 조사와 야외 조사의 관계에 대한 설명으로 옳은 것은?",
+   options:[
+     "상호 보완적 성격을 지니기 때문에 순환적으로 시행될 수 있다.",
+     "실내 조사가 끝나야만 야외 조사를 시작할 수 있다.",
+     "둘 중 하나만 선택하여 진행해야 한다.",
+     "야외 조사는 실내 조사의 결과를 무시한다.",
+     "두 조사는 서로 관련이 없다."], answer:0,
+   expl:"두 조사는 서로 보완하며 순환적으로 시행될 수 있어요. 한쪽이 끝나야만 다른 쪽을 하는 것은 아닙니다.",
+   memo:"실내 조사 ↔ 야외 조사 = '상호 보완적', 순환적 시행 가능"},
+
+  {type:'mc', q:"지역 조사의 ‘계획 수립’ 단계에서 하는 일로 옳은 것은?",
+   options:[
+     "조사 주제와 대상 지역을 선정하고 조사 항목을 정한다.",
+     "수집한 정보를 표·그래프·지도로 시각화한다.",
+     "문헌·지도·사진 등의 정보를 수집한다.",
+     "조사 보고서를 체계적으로 작성한다.",
+     "현장에 나가 주민을 면담한다."], answer:0,
+   expl:"계획 수립 단계에서는 조사 목적을 정하고 주제·대상 지역·조사 항목을 선정해요.",
+   memo:"계획 수립 = 조사 주제·대상 지역·항목 선정"},
+
+  {type:'mc', q:"‘지역 정보 분석 및 정리’ 단계에 대한 설명으로 옳은 것은?",
+   options:[
+     "수집한 정보를 표·그래프·통계 지도 등으로 시각화하여 표현한다.",
+     "조사 주제와 대상 지역을 선정한다.",
+     "해결 방안의 장단점을 비교해 최종 의사 결정을 내린다.",
+     "현장 답사 계획을 수립한다.",
+     "지역 주민을 면담한다."], answer:0,
+   expl:"분석·정리 단계에서는 수집한 정보를 항목별로 구분하고 표·그래프·지도로 시각화해 문제점을 진단해요(③은 보고서 작성 단계).",
+   memo:"분석·정리 = 표·그래프·통계 지도로 시각화 → 문제점 진단"},
+
+  {type:'mc', q:"다음 설명에 해당하는 것은? “한 해 동안 일어난 어떤 사실이나 사업에 대하여 해마다 한 번씩 발행하는 간행물”",
+   options:["통계 연보","문헌","설문지","조사 보고서","통계 지도"], answer:0,
+   expl:"통계 연보는 해마다 발행되는 간행물로, 토지 이용률·산업별 종사자 수 등 실내 조사 자료로 활용돼요.",
+   memo:"통계 연보 = 해마다 한 번씩 발행하는 간행물"},
+
+  {type:'mc', q:"다음 설명에 해당하는 현상은? “2차 산업의 비중이 감소하면서 3차 산업의 비중이 증가하는 현상”",
+   options:["탈공업화","산업화","도시화","이촌 향도","교외화"], answer:0,
+   expl:"2차 산업이 줄고 3차 산업(서비스업)이 늘어나는 것이 탈공업화예요. 울산의 2021년 산업 구조에서 나타나는 특징입니다.",
+   memo:"탈공업화 = 2차 산업↓ + 3차 산업↑"},
+
+  {type:'mc', q:"울산광역시의 산업 구조 변화(1962년 → 2021년)에 대한 설명으로 옳은 것은?",
+   options:[
+     "1차 산업의 비중이 크게 줄고 2·3차 산업의 비중이 늘었다.",
+     "1차 산업의 비중이 늘었다.",
+     "3차 산업의 비중이 줄었다.",
+     "2차 산업의 비중만 늘고 3차 산업은 변화가 없었다.",
+     "산업 구조에 변화가 없었다."], answer:0,
+   expl:"고래잡이로 유명했던 울산이 공업 도시로 성장하면서 1차 산업 비중은 크게 줄고 2·3차 산업 비중이 늘었어요.",
+   memo:"울산 산업 구조 = 1차↓ / 2차·3차↑ (탈공업화로 3차 비중 최고)"},
+
+  {type:'mc', q:"울산광역시의 토지 이용 및 경관 변화에서 파악할 수 있는 양상으로 옳은 것은?",
+   options:[
+     "논과 밭이 줄어들고 높은 건물이 많이 생겼다.",
+     "임야가 모두 사라지고 농경지가 늘었다.",
+     "시가지가 줄어들고 자연 상태로 돌아갔다.",
+     "대지 면적이 크게 감소하였다.",
+     "높은 건물이 사라지고 단층 건물이 늘었다."], answer:0,
+   expl:"산업화·도시화로 논과 밭이 줄고 높은 건물과 시가지가 확장되었어요.",
+   memo:"울산 토지·경관 = 논·밭↓ / 높은 건물·시가지↑"},
+
+  {type:'mc', q:"울산광역시의 인구 변화에 대한 설명으로 옳지 <u>않은</u> 것은?",
+   options:[
+     "총인구가 1962년 이후 크게 증가하였다.",
+     "저출생·고령화 현상이 나타나고 있다.",
+     "유소년층 인구의 비율이 줄었다.",
+     "청장년층 인구의 비율이 늘었다.",
+     "유소년층 인구의 비율이 늘고 청장년층이 줄었다."], answer:4,
+   expl:"울산도 저출생·고령화로 유소년층 비율은 ‘줄고’ 청장년층 비율은 ‘늘었어요’. ⑤는 반대입니다.",
+   memo:"울산 인구 = 총인구↑ / 저출생·고령화 → 유소년층↓·청장년층↑"},
+
+  {type:'mc', q:"울산광역시 시민들이 생각하는 환경 문제 우선 개선 사항 중 가장 큰 비중을 차지한 것은?",
+   options:["대기 환경 문제","자연 생태계 보전","폐기물 처리 및 관리","산업 공단 환경 개선","수질 개선 및 식수 관리"], answer:0,
+   expl:"대기 환경 문제(33.8%)가 가장 큰 비중을 차지했어요. 공업 도시 울산의 대기 오염 문제가 지속되고 있음을 보여 줍니다.",
+   memo:"울산 환경 문제 1순위 = 대기 환경 문제"},
+
+  {type:'mc', q:"다음 설명에 해당하는 활동은? “지역 공동체 구성원이 함께 특정 주제에 관한 정보를 현장에서 수집하고, 이를 지도로 만들어 공유하고 이용하는 과정”",
+   options:["커뮤니티 매핑","지역 조사","야외 조사","실내 조사","통계 지도 작성"], answer:0,
+   expl:"여러 사람이 함께 지역 정보를 담은 지도를 만드는 활동이 커뮤니티 매핑이에요. 학생 다수가 하는 프로젝트에 유용합니다.",
+   memo:"커뮤니티 매핑 = 함께 정보 수집 → 지도 제작·공유"},
+
+  {type:'mc', q:"지역 조사를 하는 목적으로 가장 적절한 것은?",
+   options:[
+     "지역의 공간 변화 모습을 살펴보고 문제점을 파악하여 해결 방안을 찾기 위해",
+     "다른 지역과의 경쟁에서 이기기 위해",
+     "지역의 인구를 줄이기 위해",
+     "지역의 산업을 모두 없애기 위해",
+     "지역 주민을 다른 곳으로 이주시키기 위해"], answer:0,
+   expl:"지역 조사는 공동체 구성원으로서 지역을 더 살기 좋은 공간으로 만들기 위해 문제점을 파악하고 해결 방안을 찾는 활동이에요.",
+   memo:"지역 조사 목적 = 공간 변화·문제점 파악 → 해결 방안 찾기"},
+
+  // ===== 단답형 (핵심 개념) =====
+  {type:'sa', q:"지역의 공간 변화 모습을 살펴보고 문제점을 파악한 후 해결 방안을 찾는 활동을 [   ]라고 한다.",
+   answers:["지역조사","지역 조사"], shown:"지역 조사",
+   expl:"‘계획 수립 → 정보 수집 → 분석·정리 → 보고서 작성’ 순으로 진행돼요.",
+   memo:"지역 조사 = 공간 변화·문제 파악 → 해결 방안 찾기"},
+
+  {type:'sa', q:"문헌·지도·사진 등의 정보를 수집하고 현장 답사 계획을 수립하는 단계를 [   ]라고 한다.",
+   answers:["실내조사","실내 조사"], shown:"실내 조사",
+   expl:"야외 조사와 상호 보완적 관계로 순환적으로 시행될 수 있어요.",
+   memo:"실내 조사 = 문헌·지도·사진 수집 + 답사 계획"},
+
+  {type:'sa', q:"현장에 나가 지역 주민 면담·설문 조사·실측 등으로 정보를 얻는 과정을 [   ]라고 한다.",
+   answers:["야외조사","야외 조사"], shown:"야외 조사",
+   expl:"미리 파악한 정보를 확인하고 새로운 정보를 얻는 과정이에요.",
+   memo:"야외 조사 = 주민 면담·설문·실측"},
+
+  {type:'sa', q:"연구의 자료가 되는 서적이나 문서를 [   ]이라고 한다.",
+   answers:["문헌"], shown:"문헌",
+   expl:"실내 조사에서 수집하는 대표적인 자료예요.",
+   memo:"문헌 = 연구 자료가 되는 서적·문서"},
+
+  {type:'sa', q:"한 해 동안 일어난 사실이나 사업에 대하여 해마다 한 번씩 발행하는 간행물을 [   ]라고 한다.",
+   answers:["통계연보","통계 연보"], shown:"통계 연보",
+   expl:"토지 이용률·산업별 종사자 수 등을 담고 있어 실내 조사 자료로 활용돼요.",
+   memo:"통계 연보 = 해마다 발행하는 간행물"},
+
+  {type:'sa', q:"2차 산업의 비중이 감소하면서 3차 산업의 비중이 증가하는 현상을 [   ]라고 한다.",
+   answers:["탈공업화"], shown:"탈공업화",
+   expl:"울산광역시의 2021년 산업 구조에서 나타나는 특징이에요.",
+   memo:"탈공업화 = 2차 산업↓ + 3차 산업↑"},
+
+  {type:'sa', q:"지역 공동체 구성원이 함께 정보를 현장에서 수집하여 지도로 만들어 공유·이용하는 과정을 [   ]이라고 한다.",
+   answers:["커뮤니티매핑","커뮤니티 매핑"], shown:"커뮤니티 매핑",
+   expl:"학생 다수가 함께 하는 프로젝트 활동에 유용한 수단이에요.",
+   memo:"커뮤니티 매핑 = 함께 정보 수집 → 지도 제작·공유"},
+
+  {type:'sa', q:"공통된 특성이 있는 여러 장소가 모여 형성된 더 넓은 범위의 공간을 [   ]이라고 한다.",
+   answers:["지역"], shown:"지역",
+   expl:"지역의 공간 변화를 파악하기 위해 지역 조사를 실시해요.",
+   memo:"지역 = 공통 특성을 가진 장소들이 모인 공간"},
+
+  // ===== O/X =====
+  {type:'ox', q:"지역 조사의 첫 단계는 지역 조사 계획 수립이다.", answer:'O',
+   expl:"맞아요. 조사 주제·대상 지역·항목을 정하는 계획 수립이 가장 먼저 이루어집니다.",
+   memo:"지역 조사 1단계 = 계획 수립"},
+
+  {type:'ox', q:"지역 조사는 ‘계획 수립 → 정보 수집 → 정보 분석·정리 → 보고서 작성’ 순으로 진행된다.", answer:'O',
+   expl:"맞아요. 이 순서를 정확히 기억해 두세요.",
+   memo:"순서 = 계획 수립 → 정보 수집 → 분석·정리 → 보고서 작성"},
+
+  {type:'ox', q:"실내 조사는 문헌·지도·사진 등의 정보를 수집하는 단계이다.", answer:'O',
+   expl:"맞아요. 실내 조사에서는 자료 수집과 함께 현장 답사 계획을 수립합니다.",
+   memo:"실내 조사 = 문헌·지도·사진 수집"},
+
+  {type:'ox', q:"주민 면담과 설문 조사는 실내 조사에 해당한다.", answer:'X',
+   expl:"틀려요. 주민 면담·설문 조사는 현장에서 이루어지는 ‘야외 조사’입니다.",
+   memo:"주민 면담·설문 = 야외 조사 (실내 아님)"},
+
+  {type:'ox', q:"실내 조사와 야외 조사는 상호 보완적이어서 순환적으로 시행될 수 있다.", answer:'O',
+   expl:"맞아요. 두 조사는 서로 보완하며 순환적으로 진행될 수 있습니다.",
+   memo:"실내 ↔ 야외 = 상호 보완·순환적"},
+
+  {type:'ox', q:"현장 답사 계획 수립은 야외 조사에 해당한다.", answer:'X',
+   expl:"틀려요. 현장 답사 ‘계획 수립’은 실내 조사 단계에서 이루어져요. 실제 답사는 야외 조사입니다.",
+   memo:"현장 답사 '계획 수립' = 실내 조사"},
+
+  {type:'ox', q:"지역 정보 분석 및 정리 단계에서는 정보를 표·그래프·지도로 시각화한다.", answer:'O',
+   expl:"맞아요. 시각화를 통해 공간 변화를 한눈에 확인하고 문제점을 진단합니다.",
+   memo:"분석·정리 = 표·그래프·지도 시각화"},
+
+  {type:'ox', q:"탈공업화는 3차 산업의 비중이 감소하고 2차 산업의 비중이 증가하는 현상이다.", answer:'X',
+   expl:"틀려요. 방향이 반대예요. 탈공업화는 ‘2차 산업↓·3차 산업↑’ 현상입니다.",
+   memo:"탈공업화 = 2차↓·3차↑ (방향 주의!)"},
+
+  {type:'ox', q:"울산광역시는 산업화로 1차 산업 비중이 줄고 2·3차 산업 비중이 늘었다.", answer:'O',
+   expl:"맞아요. 공업 도시로 성장하며 1차 산업 비중이 크게 줄었습니다.",
+   memo:"울산 = 1차↓ / 2차·3차↑"},
+
+  {type:'ox', q:"울산광역시의 토지 이용 변화에서 논과 밭이 줄고 높은 건물이 많이 생겼다.", answer:'O',
+   expl:"맞아요. 자연 상태의 토지가 줄고 시가지가 먼 곳까지 확장되었습니다.",
+   memo:"울산 토지·경관 = 논·밭↓·높은 건물↑"},
+
+  {type:'ox', q:"울산광역시에서도 저출생·고령화 현상이 나타나고 있다.", answer:'O',
+   expl:"맞아요. 인구 피라미드에서 유소년층 비율이 줄고 고령층 비율이 늘어난 것을 볼 수 있어요.",
+   memo:"울산 인구 = 저출생·고령화 현상"},
+
+  {type:'ox', q:"울산광역시 시민들이 우선 개선을 요구한 환경 문제 중 대기 환경 문제가 가장 큰 비중을 차지했다.", answer:'O',
+   expl:"맞아요. 대기 환경 문제(33.8%)가 가장 큰 비중으로, 대기 오염 문제가 지속됨을 보여 줍니다.",
+   memo:"울산 환경 1순위 = 대기 환경 문제"},
+
+  {type:'ox', q:"도시가 성장하며 타 지역 사람이 유입되면서 울산 주민의 이웃 간 친밀도가 높아졌다.", answer:'X',
+   expl:"틀려요. 타 지역 사람 유입과 젊은 사람 증가로 이웃 간 친밀도는 과거에 비해 ‘떨어졌어요’.",
+   memo:"울산 인간관계 = 이웃 친밀도 '떨어짐'(높아짐 아님)"},
+
+  {type:'ox', q:"커뮤니티 매핑은 지역 정보를 현장에서 수집해 지도로 만들어 공유하는 활동이다.", answer:'O',
+   expl:"맞아요. 여러 사람이 함께 지역 정보를 담은 지도를 만드는 활동입니다.",
+   memo:"커뮤니티 매핑 = 정보 수집 → 지도 제작·공유"},
+
+  {type:'ox', q:"통계 연보는 해마다 한 번씩 발행하는 간행물이다.", answer:'O',
+   expl:"맞아요. 한 해 동안의 사실·사업에 대해 해마다 발행되며 실내 조사 자료로 쓰입니다.",
+   memo:"통계 연보 = 해마다 발행하는 간행물"}
+];
+
+const MARKS=['①','②','③','④','⑤'];
+let order = DATA.map((_,i)=>i);
+let pos = 0;
+const state = {};
+function norm(s){return (s||'').toString().trim().toLowerCase().replace(/\s+/g,'').replace(/[().,·「」]/g,'');}
+function st(idx){ return state[idx] || (state[idx]={picked:null,graded:false,correct:false}); }
+function updateTop(){
+  document.getElementById('pNow').textContent=Math.min(pos+1,order.length);
+  document.getElementById('pTotal').textContent=order.length;
+  document.getElementById('prog').style.width=((pos)/order.length*100)+'%';
+}
+function renderQuestion(){
+  updateTop();
+  const idx=order[pos]; const item=DATA[idx]; const s=st(idx);
+  const stage=document.getElementById('stage');
+  const tagMap={mc:['mc','객관식'],sa:['sa','단답형'],ox:['ox','O / X']};
+  const [tagCls,tagTxt]=tagMap[item.type];
+  let qhtml=item.q.replace(/\[\s*\]/g,'<span class="blank">　　</span>');
+  let body='';
+  if(item.type==='mc'){
+    body='<div class="opts">'+item.options.map((o,i)=>`<div class="opt" data-i="${i}"><span class="mk">${MARKS[i]}</span><span>${o}</span></div>`).join('')+'</div>';
+  }else if(item.type==='ox'){
+    body='<div class="ox"><button data-v="O">O</button><button data-v="X">X</button></div>';
+  }else{
+    body='<input class="sa-input" type="text" placeholder="정답을 입력하세요" autocomplete="off">';
+  }
+  const lastQ=(pos===order.length-1);
+  stage.innerHTML=`
+    <div class="q">
+      <div class="q-head"><span class="num">${pos+1}</span><span class="tag ${tagCls}">${tagTxt}</span></div>
+      <p class="q-text">${qhtml}</p>
+      ${body}
+      <div class="result"></div>
+      <div class="nav">
+        <button class="prev" id="btnPrev" ${pos===0?'disabled':''}>← 이전</button>
+        <button class="primary" id="btnPrimary">채점하기</button>
+      </div>
+    </div>`;
+  const card=stage.querySelector('.q');
+  if(item.type==='mc'){
+    card.querySelectorAll('.opt').forEach(el=>{
+      const i=+el.dataset.i;
+      if(s.picked===i) el.classList.add('sel');
+      el.addEventListener('click',()=>{ if(s.graded) return; card.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel')); el.classList.add('sel'); s.picked=i; });
+    });
+  }else if(item.type==='ox'){
+    card.querySelectorAll('.ox button').forEach(el=>{
+      if(s.picked===el.dataset.v) el.classList.add('sel');
+      el.addEventListener('click',()=>{ if(s.graded) return; card.querySelectorAll('.ox button').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); s.picked=el.dataset.v; });
+    });
+  }else{
+    const inp=card.querySelector('.sa-input');
+    if(s.picked!=null) inp.value=s.picked;
+    inp.addEventListener('input',()=>{ s.picked=inp.value; });
+    inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){e.preventDefault(); document.getElementById('btnPrimary').click();}});
+    if(!s.graded) setTimeout(()=>inp.focus(),50);
+  }
+  document.getElementById('btnPrev').addEventListener('click',()=>{ if(pos>0){pos--; renderQuestion();} });
+  const primary=document.getElementById('btnPrimary');
+  if(s.graded){
+    showGraded(card,idx);
+    primary.textContent=lastQ?'결과 보기 →':'다음 문제 →';
+    primary.onclick=()=>goNext(lastQ);
+  }else{
+    primary.textContent='채점하기';
+    primary.onclick=()=>{ if(gradeCurrent(card,idx)){ primary.textContent=lastQ?'결과 보기 →':'다음 문제 →'; primary.onclick=()=>goNext(lastQ); } };
+  }
+}
+function gradeCurrent(card,idx){
+  const item=DATA[idx]; const s=st(idx);
+  if(s.picked==null || (item.type==='sa' && !norm(s.picked))){
+    const inp=card.querySelector('.sa-input'); if(inp) inp.focus();
+    card.querySelector('#btnPrimary').animate([{transform:'translateX(0)'},{transform:'translateX(-4px)'},{transform:'translateX(4px)'},{transform:'translateX(0)'}],{duration:220});
+    return false;
+  }
+  if(item.type==='mc') s.correct=(+s.picked===item.answer);
+  else if(item.type==='ox') s.correct=(s.picked===item.answer);
+  else s.correct=item.answers.some(a=>norm(a)===norm(s.picked));
+  s.graded=true; showGraded(card,idx); return true;
+}
+function showGraded(card,idx){
+  const item=DATA[idx]; const s=st(idx);
+  if(item.type==='mc'){
+    card.querySelectorAll('.opt').forEach(el=>{ el.style.cursor='default'; const i=+el.dataset.i; if(i===item.answer) el.classList.add('correct'); if(i===+s.picked && !s.correct) el.classList.add('incorrect'); });
+  }else if(item.type==='ox'){
+    card.querySelectorAll('.ox button').forEach(el=>{ el.style.cursor='default'; if(el.dataset.v===item.answer) el.classList.add('correct'); if(el.dataset.v===s.picked && !s.correct) el.classList.add('incorrect'); });
+  }else{
+    const inp=card.querySelector('.sa-input'); inp.readOnly=true; inp.classList.add(s.correct?'correct':'incorrect');
+  }
+  const ansShown = item.type==='mc'?MARKS[item.answer]+' '+item.options[item.answer] : item.type==='ox'?item.answer : item.shown;
+  const res=card.querySelector('.result');
+  res.innerHTML=`
+    <div class="verdict ${s.correct?'ok':'no'}"><span class="ic">${s.correct?'⭕':'❌'}</span>${s.correct?'정답이에요!':'오답이에요'}</div>
+    <p class="ans-line"><span class="lab">정답</span> · ${ansShown}</p>
+    <div class="expl"><span class="lab">해설</span>${item.expl}</div>
+    <div class="memo"><span class="lab">📌 암기 포인트</span>${item.memo}</div>`;
+  res.classList.add('show');
+}
+function goNext(lastQ){ if(lastQ){ showSummary(); } else { pos++; renderQuestion(); window.scrollTo({top:0,behavior:'smooth'}); } }
+function showSummary(){
+  document.getElementById('prog').style.width='100%';
+  document.getElementById('pNow').textContent=order.length;
+  const graded=order.filter(i=>state[i]&&state[i].graded);
+  const correct=graded.filter(i=>state[i].correct).length;
+  const total=order.length; const pct=Math.round(correct/total*100);
+  const wrong=order.filter(i=>state[i]&&state[i].graded&&!state[i].correct);
+  const types={mc:'객관식',sa:'단답형',ox:'O / X'};
+  const bd=Object.keys(types).map(t=>{
+    const tot=order.filter(i=>DATA[i].type===t).length; if(tot===0) return '';
+    const cor=order.filter(i=>DATA[i].type===t && state[i]&&state[i].correct).length;
+    return `<div class="bd"><div class="t">${types[t]}</div><div class="v">${cor} / ${tot}</div></div>`;
+  }).join('');
+  let msg;
+  if(pct===100) msg='완벽해요! 다 맞혔어요 🎉';
+  else if(pct>=80) msg='잘했어요! 거의 다 외웠네요 👍';
+  else if(pct>=60) msg='절반 넘게 맞혔어요. 틀린 것만 다시 보면 돼요.';
+  else msg='틀린 문제 위주로 한 번 더 풀어 봐요. 금방 늘어요!';
+  const C=2*Math.PI*52;
+  document.getElementById('stage').innerHTML=`
+    <div class="summary">
+      <div class="ring">
+        <svg width="120" height="120">
+          <circle cx="60" cy="60" r="52" fill="none" stroke="#e3e8e0" stroke-width="12"/>
+          <circle cx="60" cy="60" r="52" fill="none" stroke="#2f7d5b" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct/100)}"/>
+        </svg>
+        <div class="pct"><b>${pct}%</b><span>정답률</span></div>
+      </div>
+      <div class="score-label">맞힌 문제</div>
+      <div class="score-big">${correct} <span style="font-size:24px;color:var(--muted);font-weight:700;">/ ${total}</span></div>
+      <div class="breakdown">${bd}</div>
+      <div class="summary-msg">${msg}</div>
+      <div class="sum-btns">
+        <button class="btn-wrong" id="sWrong" ${wrong.length===0?'disabled':''}>✏️ 오답만 다시 풀기 (${wrong.length}문제)</button>
+        <button class="btn-ghost" id="sRetry">↺ 전체 다시 풀기</button>
+        <button class="btn-ghost" id="sShuffle">🔀 순서 섞어서 다시</button>
+      </div>
+    </div>`;
+  document.getElementById('sWrong').addEventListener('click',()=>{ if(wrong.length===0) return; wrong.forEach(i=>state[i]={picked:null,graded:false,correct:false}); order=wrong.slice(); pos=0; renderQuestion(); window.scrollTo({top:0,behavior:'smooth'}); });
+  document.getElementById('sRetry').addEventListener('click',()=>resetAll(false));
+  document.getElementById('sShuffle').addEventListener('click',()=>resetAll(true));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function resetAll(shuffle){
+  for(const k in state) delete state[k];
+  order=DATA.map((_,i)=>i);
+  if(shuffle) for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
+  pos=0; renderQuestion(); window.scrollTo({top:0,behavior:'smooth'});
+}
+document.getElementById('btnShuffle').addEventListener('click',function(){ if(!confirm('순서를 섞고 처음부터 다시 풀까요? (현재 진행 기록은 지워져요)')) return; resetAll(true); });
+renderQuestion();
+</script>
+</body>
+</html>
